@@ -1,37 +1,44 @@
-## Welcome to GitHub Pages
+# pokedex-actions
 
-You can use the [editor on GitHub](https://github.com/geeksbaek/pokedex-actions/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+pokedex-actions 는 모바일 게임 [Pokémon GO](https://www.pokemongo.com/) 플레이를
+위한 `포켓몬 도감`을 구글 어시스턴트 챗봇으로 구현한 것입니다.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Features
 
-### Markdown
+### 타입 조회
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+특정 포켓몬의 타입을 물어볼 수 있습니다.
 
-```markdown
-Syntax highlighted code block
+### 타입 조회 질문 예시
 
-# Header 1
-## Header 2
-### Header 3
+- `포켓몬 도감에게 피카츄의 속성 물어봐`
+  - 피카츄의 타입은 전기입니다.
+- `포켓몬 도감에게 이상해씨의 타입 물어봐`
+  - 이상해씨의 타입은 풀, 독입니다.
 
-- Bulleted
-- List
+### 카운터 포켓몬 조회
 
-1. Numbered
-2. List
+특정 포켓몬에게 가장 큰 데미지를 줄 수 있는 포켓몬을 물어볼 수 있습니다.
+카운터 포켓몬은 포켓몬 간의 상성 및 자속 보정, 개체값 등을 고려하여 계산됩니다.
 
-**Bold** and _Italic_ and `Code` text
+- `포켓몬 도감에게 뮤츠의 상성 물어봐`
+  - 뮤츠. 에스퍼 타입을 가지는 포켓몬. 뮤츠의 카운터 포켓몬은 사이코커터, 섀도볼을 사용하는 뮤츠이다.
+- `포켓몬 도감한테 파이어의 카운터 물어봐`
+  - 파이어. 불꽃, 비행 타입을 가지는 포켓몬. 파이어의 카운터 포켓몬은 떨어뜨리기, 스톤에지를 사용하는 마기라스이다.
+- `포켓몬 도감한테 레지아이스한테 강한 포켓몬 물어봐`
+  - 레지아이스. 얼음 타입을 가지는 포켓몬. 레지아이스의 카운터 포켓몬은 회오리불꽃, 오버히트를 사용하는 파이어이다.
 
-[Link](url) and ![Image](src)
-```
+### 포켓몬 둥지 조회 (개발 중)
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+특정 포켓몬의 둥지, 또는 내 위치에서 가장 가까운 곳의 포켓몬 둥지를 물어볼 수 있습니다.
+포켓몬 둥지 조회는 권한 요청을 거쳐 사용자의 위치 정보 사용 동의를 받은 뒤에 이용할 수 있습니다.
 
-### Jekyll Themes
+- `포켓몬 도감한테 파이리 둥지 물어봐`
+- `포켓몬 도감한테 이 근처에 둥지 있는지 물어봐`
+- `포켓몬 도감한테 화랑공원이 무슨 포켓몬 둥지인지 물어봐`
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/geeksbaek/pokedex-actions/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+## Data Source
 
-### Support or Contact
+pokedex-actions 는 아래 웹사이트의 데이터를 사용합니다.
 
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+- https://pokemon.gameinfo.io
