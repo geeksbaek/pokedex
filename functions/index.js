@@ -83,6 +83,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         advice.push(`포획 난이도는 매우 어려운 편이므로 주의할 것!`);
       }
 
+      advice.push(`${find.types.join(", ")} 타입을 가지고 있다.`);
       agent.add(advice.join("\n"));
 
       // agent.add(
@@ -99,8 +100,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       find.evolution.forEach(name => {
         agent.add(new Suggestion(name));
       });
-      agent.add(new Suggestion(`${pokemonName}의 타입`));
+      // agent.add(new Suggestion(`${pokemonName}의 타입`));
       agent.add(new Suggestion(`${pokemonName}의 카운터 포켓몬`));
+      agent.add(new Suggestion(`알았어`));
     }
 
     // 둥지 묻기
@@ -145,6 +147,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
           ", "
         )} 타입의 공격에 특히 취약하다.`
       );
+
+      agent.add(new Image(find.image_url));
+
       agent.add(
         `${pokemonName}에게 가장 강한 포켓몬은 ${
           result[0].quick_skill
@@ -152,8 +157,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
           result[0].name
         }이다.`
       );
-      agent.add(new Image(find.image_url));
       agent.add(new Suggestion(`${result[0].name}`));
+      agent.add(new Suggestion(`알았어`));
     }
 
     // 타입의 포켓몬 묻기
@@ -188,6 +193,11 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
           .map(v => v.name)
           .join(", ")}...`
       );
+
+      selected.forEach(v => {
+        agent.add(new Suggestion(v.name));
+      });
+      agent.add(new Suggestion(`알았어`));
     }
 
     // 포켓몬의 타입 묻기
