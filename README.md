@@ -1,7 +1,7 @@
-# pokedex-actions
+# pokedex
 
-pokedex-actions 는 모바일 게임 [Pokémon GO](https://www.pokemongo.com/) 플레이를
-위한 `포켓몬 도감`을 구글 어시스턴트 챗봇으로 구현한 것입니다.
+포켓몬 도감(pokedex)은 모바일 게임 [Pokémon GO](https://www.pokemongo.com/) 플레이를
+보조하는 구글 어시스턴트 챗봇입니다.
 
 현재 포켓몬 도감에는 Pokémon GO 에서 만날 수 있는 1 세대 ~ 3 세대 포켓몬과
 알로라 폼 타입 포켓몬의 데이터가 들어 있습니다.
