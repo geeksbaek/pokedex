@@ -81,3 +81,28 @@ query params: {"updateMask":"sourceUploadUrl,name,labels,runtime,httpsTrigger"}
 [debug] [2018-09-26T16:47:49.504Z] <<< HTTP RESPONSE 200
 [debug] [2018-09-26T16:47:51.506Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cG9rZWRleC04YmIwOC91cy1jZW50cmFsMS9kaWFsb2dmbG93RmlyZWJhc2VGdWxmaWxsbWVudC9uelh6XzBmX1dNcw  
  
+[debug] [2018-09-26T16:47:51.850Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-26T16:47:53.851Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cG9rZWRleC04YmIwOC91cy1jZW50cmFsMS9kaWFsb2dmbG93RmlyZWJhc2VGdWxmaWxsbWVudC9uelh6XzBmX1dNcw  
+ 
+[debug] [2018-09-26T16:47:54.198Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-26T16:47:56.200Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cG9rZWRleC04YmIwOC91cy1jZW50cmFsMS9kaWFsb2dmbG93RmlyZWJhc2VGdWxmaWxsbWVudC9uelh6XzBmX1dNcw  
+ 
+[debug] [2018-09-26T16:47:56.545Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-26T16:47:58.545Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cG9rZWRleC04YmIwOC91cy1jZW50cmFsMS9kaWFsb2dmbG93RmlyZWJhc2VGdWxmaWxsbWVudC9uelh6XzBmX1dNcw  
+ 
+[debug] [2018-09-26T16:47:58.907Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-26T16:48:00.908Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cG9rZWRleC04YmIwOC91cy1jZW50cmFsMS9kaWFsb2dmbG93RmlyZWJhc2VGdWxmaWxsbWVudC9uelh6XzBmX1dNcw  
+ 
+[debug] [2018-09-26T16:48:01.262Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-26T16:48:03.263Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cG9rZWRleC04YmIwOC91cy1jZW50cmFsMS9kaWFsb2dmbG93RmlyZWJhc2VGdWxmaWxsbWVudC9uelh6XzBmX1dNcw  
+ 
+[debug] [2018-09-26T16:48:03.611Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-26T16:48:05.612Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cG9rZWRleC04YmIwOC91cy1jZW50cmFsMS9kaWFsb2dmbG93RmlyZWJhc2VGdWxmaWxsbWVudC9uelh6XzBmX1dNcw  
+ 
+[debug] [2018-09-26T16:48:05.990Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-26T16:48:07.992Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cG9rZWRleC04YmIwOC91cy1jZW50cmFsMS9kaWFsb2dmbG93RmlyZWJhc2VGdWxmaWxsbWVudC9uelh6XzBmX1dNcw  
+ 
+[debug] [2018-09-26T16:48:08.319Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-26T16:48:10.320Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cG9rZWRleC04YmIwOC91cy1jZW50cmFsMS9kaWFsb2dmbG93RmlyZWJhc2VGdWxmaWxsbWVudC9uelh6XzBmX1dNcw  
+ 
+[debug] [2018-09-26T16:48:10.692Z] <<< HTTP RESPONSE 200
