@@ -1,0 +1,44 @@
+[
+  {
+    "id": "f3dd9ddd-7ae9-42f9-a310-beb310701f43",
+    "data": [
+      {
+        "text": "넌 누구야",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "ddebde36-01da-4c40-b6f3-51a1c4f162a5",
+    "data": [
+      {
+        "text": "도와줘",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "7d693621-0e47-446e-9fea-b06378706177",
+    "data": [
+      {
+        "text": "뭘 할 ",
+        "userDefined": false
+      },
+      {
+        "text": "수",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": " 있니?",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  }
+]

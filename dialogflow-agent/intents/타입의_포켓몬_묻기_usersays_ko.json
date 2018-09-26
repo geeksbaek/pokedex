@@ -1,0 +1,333 @@
+[
+  {
+    "id": "c3dddf69-8c07-4425-9b48-e9f883dad3f8",
+    "data": [
+      {
+        "text": "전기",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "비행",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "타입",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬 뭐야",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "c360a219-b44b-492e-ab26-adf048cd920e",
+    "data": [
+      {
+        "text": "전기",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "비행",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "타입",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬 물어봐",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "5b9f5495-7f04-4189-8368-c638449de1d7",
+    "data": [
+      {
+        "text": "전기",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "비행",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "타입",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "1e2d18c1-9305-4ad1-889d-012c3ad4931c",
+    "data": [
+      {
+        "text": "전기",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": false
+      },
+      {
+        "text": "랑",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "비행",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "타입",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬 ",
+        "userDefined": false
+      },
+      {
+        "text": "물",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": "어봐",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "cc424e84-d8f6-4bf5-8d0d-feea1ee74507",
+    "data": [
+      {
+        "text": "전기",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "비행",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "타입",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "8d81817a-f213-4b10-9453-928b703b1987",
+    "data": [
+      {
+        "text": "전기",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬 ",
+        "userDefined": false
+      },
+      {
+        "text": "물",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": "어봐",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "02fe646c-4cc8-4ea3-baf5-f80f6f003d2f",
+    "data": [
+      {
+        "text": "전기",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "타입",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬 알려줘",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "3177fbac-9d46-437d-95c5-24708c0f8468",
+    "data": [
+      {
+        "text": "전기",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "9f87da5a-f539-44e9-a9f3-4a1b3b9433a2",
+    "data": [
+      {
+        "text": "전기",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "타입",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "b7509996-f1d4-4b44-a4ad-f1ae318f555d",
+    "data": [
+      {
+        "text": "전기",
+        "alias": "pokemon-type-list",
+        "meta": "@pokemon-type-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  }
+]

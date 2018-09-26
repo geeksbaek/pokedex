@@ -1,0 +1,185 @@
+[
+  {
+    "id": "18a55967-3c31-4f83-851a-70829216e525",
+    "data": [
+      {
+        "text": "300",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": "번 포켓몬",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "69f5b519-edf3-47b3-8a62-ea21ca573d1a",
+    "data": [
+      {
+        "text": "알로라 라이츄",
+        "alias": "pokemon-composite-list",
+        "meta": "@pokemon-composite-list",
+        "userDefined": false
+      },
+      {
+        "text": "는 무슨 포켓몬",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "0d7ce47c-8a53-454f-b62e-517851ca4940",
+    "data": [
+      {
+        "text": "알로라 라이츄",
+        "alias": "pokemon-composite-list",
+        "meta": "@pokemon-composite-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "정",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": "보",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "21a2d36f-b696-47b0-bc75-b2b94c0fe823",
+    "data": [
+      {
+        "text": "알로라 라이츄",
+        "alias": "pokemon-composite-list",
+        "meta": "@pokemon-composite-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "물",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": "어봐",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "deb5d406-a895-45d7-86fd-7e97ec8fe668",
+    "data": [
+      {
+        "text": "알로라 라이츄",
+        "alias": "pokemon-composite-list",
+        "meta": "@pokemon-composite-list",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "73c396a2-8dec-4bd1-a2c4-a8103e1d29cc",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " 무슨 포켓몬이야",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "5b71b3ea-fbe6-4f28-bef2-cfb66f0148f1",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "정",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": "보",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "2a73a153-4cfe-4484-9754-9c30622f99d2",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "물",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": "어봐",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "3cea4bbe-001b-4883-97ab-f949e8d502f1",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  }
+]

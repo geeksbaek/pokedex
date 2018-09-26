@@ -1,0 +1,128 @@
+[
+  {
+    "id": "906bde2c-0d57-420f-9b79-ff6297d891a2",
+    "data": [
+      {
+        "text": "스톱",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "726b587c-b31a-4528-97b3-5ce241bc9a8f",
+    "data": [
+      {
+        "text": "스탑",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "ce873059-c6ab-4624-8b88-72277cec3361",
+    "data": [
+      {
+        "text": "오",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": "케이",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "d7991361-005b-4b78-80a2-095339b93777",
+    "data": [
+      {
+        "text": "멈춰",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "f2dc6705-8867-4131-aa74-56a419d1a74b",
+    "data": [
+      {
+        "text": "그만해",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "81ef06b4-47f3-4632-9d26-229d7ff29bf6",
+    "data": [
+      {
+        "text": "들어가",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "989b66df-40db-4e47-9733-52814ce8e91d",
+    "data": [
+      {
+        "text": "알았어",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "c1b52ab8-e193-4bd1-adf6-eaff59190f4b",
+    "data": [
+      {
+        "text": "끝",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "ef3740c4-d3ba-44bb-b16f-edc115f22a01",
+    "data": [
+      {
+        "text": "나가",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "ef7b9798-259f-4b87-aa2c-9f430e72d15e",
+    "data": [
+      {
+        "text": "종료",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "47710dd9-646d-42c0-a11f-3098f289a882",
+    "data": [
+      {
+        "text": "그만",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  }
+]

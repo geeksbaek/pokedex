@@ -1,0 +1,58 @@
+{
+  "id": "624d48a4-eb2a-42f8-a861-04b518a4f1b3",
+  "name": "포켓몬의_타입_묻기",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "282f685f-274d-4ea4-879f-f3ae94e1d3b9",
+          "required": false,
+          "dataType": "@pokemon-list",
+          "name": "pokemon-list",
+          "value": "$pokemon-list",
+          "prompts": [
+            {
+              "lang": "ko",
+              "value": "포켓몬 이름을 말하시오."
+            }
+          ],
+          "isList": true
+        },
+        {
+          "id": "8d93e9bb-1549-4a54-be40-9e6c77cfc7e9",
+          "required": false,
+          "dataType": "@question-type",
+          "name": "question-type",
+          "value": "$question-type",
+          "isList": true
+        },
+        {
+          "id": "ff3d31ea-5604-41f3-ac80-cf56bf013847",
+          "required": false,
+          "dataType": "@pokemon-composite-list",
+          "name": "pokemon-composite-list",
+          "value": "$pokemon-composite-list",
+          "isList": true
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "ko",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": []
+}

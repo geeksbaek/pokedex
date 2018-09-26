@@ -1,0 +1,50 @@
+{
+  "id": "e55fac48-7aae-4045-9689-65034061e480",
+  "name": "포켓몬_묻기",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "a6407ff3-9c9a-4749-aacf-a97a0fe2fc71",
+          "required": false,
+          "dataType": "@pokemon-list",
+          "name": "pokemon-list",
+          "value": "$pokemon-list",
+          "prompts": [
+            {
+              "lang": "ko",
+              "value": "포켓몬의 이름을 알려 주세요."
+            }
+          ],
+          "isList": false
+        },
+        {
+          "id": "ac507f88-5a62-4e8f-bfd3-f2dcf6ffeea5",
+          "required": false,
+          "dataType": "@pokemon-composite-list",
+          "name": "pokemon-composite-list",
+          "value": "$pokemon-composite-list",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "ko",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": []
+}

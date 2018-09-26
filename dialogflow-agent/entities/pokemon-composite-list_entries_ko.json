@@ -1,0 +1,20 @@
+[
+  {
+    "value": "@pokemon-form-type-list:pokemon-form-type-list @pokemon-list:pokemon-list",
+    "synonyms": [
+      "@pokemon-form-type-list:pokemon-form-type-list @pokemon-list:pokemon-list"
+    ]
+  },
+  {
+    "value": "@pokemon-form-type-list:pokemon-form-type-list 폼 @pokemon-list:pokemon-list",
+    "synonyms": [
+      "@pokemon-form-type-list:pokemon-form-type-list 폼 @pokemon-list:pokemon-list"
+    ]
+  },
+  {
+    "value": "@pokemon-form-type-list:pokemon-form-type-list 폼 타입 @pokemon-list:pokemon-list",
+    "synonyms": [
+      "@pokemon-form-type-list:pokemon-form-type-list 폼 타입 @pokemon-list:pokemon-list"
+    ]
+  }
+]

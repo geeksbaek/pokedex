@@ -1,0 +1,657 @@
+[
+  {
+    "id": "f4842fde-4218-4bff-95e3-27243f8dcb46",
+    "data": [
+      {
+        "text": "캐스퐁 라이츄",
+        "alias": "pokemon-composite-list",
+        "meta": "@pokemon-composite-list",
+        "userDefined": false
+      },
+      {
+        "text": "랑",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "알로라 라이츄",
+        "alias": "pokemon-composite-list",
+        "meta": "@pokemon-composite-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "타입",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "a02582ff-04b9-4689-8fc8-8dead04fafbd",
+    "data": [
+      {
+        "text": "알로라 폼 라이츄",
+        "alias": "pokemon-composite-list",
+        "meta": "@pokemon-composite-list",
+        "userDefined": false
+      },
+      {
+        "text": "랑",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "라이츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "타입",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "f1c10610-ad87-4345-b0e4-bca7ab307e1d",
+    "data": [
+      {
+        "text": "알로라 라이츄",
+        "alias": "pokemon-composite-list",
+        "meta": "@pokemon-composite-list",
+        "userDefined": true
+      },
+      {
+        "text": "랑",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "알로라 닥트리오",
+        "alias": "pokemon-composite-list",
+        "meta": "@pokemon-composite-list",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "타입",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "4d4dcc11-c7ab-473b-a54b-e48a3643b89b",
+    "data": [
+      {
+        "text": "알로라 라이츄",
+        "alias": "pokemon-composite-list",
+        "meta": "@pokemon-composite-list",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "타입",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "d1ea200f-3fb1-40c1-bfb5-7bfa18efa610",
+    "data": [
+      {
+        "text": "알로라 라이츄",
+        "alias": "pokemon-composite-list",
+        "meta": "@pokemon-composite-list",
+        "userDefined": true
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "1a0dbb02-b8ff-45d9-92e6-04b56e49f8c7",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": "랑",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "파이리",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": "랑",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "이상해씨",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "351fabed-4010-4139-8ae0-a1fb9a7aab0c",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": "와 ",
+        "userDefined": false
+      },
+      {
+        "text": "파이리",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": "와 ",
+        "userDefined": false
+      },
+      {
+        "text": "이상해씨",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "물",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": "어봐",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "78caf156-7464-40c2-875d-c25e40e057e8",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": "와 ",
+        "userDefined": false
+      },
+      {
+        "text": "파이리",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "물",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": "어봐",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "853415f4-7dbb-48cc-bcfa-b5fc0e5bf5d9",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "파이리",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": true
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "d4f7cd94-0bfb-4eb9-839a-66da2a264f78",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "파이리",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "eb93368f-5c11-4c11-823e-e00302a96195",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": "와 ",
+        "userDefined": false
+      },
+      {
+        "text": "파이리",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "77720412-1d7e-4f67-a517-63fc38a39a86",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": "와 ",
+        "userDefined": false
+      },
+      {
+        "text": "파이리",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " 알려줘",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "9a00a7da-bb4d-49ac-ad20-4997407f3bc9",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " 알려줘",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "5d327573-2865-47f5-b231-0ced99d561ff",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": "의 ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " 알려줘",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "fa434854-762b-43ee-bca0-2d7a4503ced1",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": "의 ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": "이",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": " 뭐야",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "24dedc38-1363-444c-8908-e847380a866e",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "물",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": "어봐",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "fe58278a-3b2f-4049-90b1-916b0139d600",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": "의 ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "fa57c928-43f9-44c2-b7a5-c1ab9dfa217b",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      },
+      {
+        "text": " 뭐야",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "ba06eafc-c283-432a-8c14-49aac34e91f1",
+    "data": [
+      {
+        "text": "피카츄",
+        "alias": "pokemon-list",
+        "meta": "@pokemon-list",
+        "userDefined": false
+      },
+      {
+        "text": " ",
+        "userDefined": false
+      },
+      {
+        "text": "속성",
+        "alias": "question-type",
+        "meta": "@question-type",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  }
+]

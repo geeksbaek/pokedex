@@ -1,0 +1,32 @@
+{
+  "id": "45fc4805-329b-41bd-a14a-e3eaa02cd330",
+  "name": "Default Fallback Intent",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "action": "input.unknown",
+      "affectedContexts": [],
+      "parameters": [],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "ko",
+          "speech": [
+            "포켓몬 이름을 말씀해 주세요.",
+            "무슨 포켓몬이 궁금하신가요?",
+            "포켓몬 이름을 알려주세요."
+          ]
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": true,
+  "events": []
+}

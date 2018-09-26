@@ -1,0 +1,50 @@
+{
+  "id": "f851fc5c-49f1-4931-aed4-9dbd61a83602",
+  "name": "타입의_포켓몬_묻기",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "2890da53-d7c3-4932-92c8-0b471e17a939",
+          "required": true,
+          "dataType": "@pokemon-type-list",
+          "name": "pokemon-type-list",
+          "value": "$pokemon-type-list",
+          "prompts": [
+            {
+              "lang": "ko",
+              "value": "포켓몬 이름을 말하시오."
+            }
+          ],
+          "isList": true
+        },
+        {
+          "id": "eb5a1171-0825-4f3b-93e3-38fb306d0b6d",
+          "required": false,
+          "dataType": "@question-type",
+          "name": "question-type",
+          "value": "$question-type",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "ko",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": []
+}

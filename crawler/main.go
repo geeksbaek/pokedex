@@ -16,14 +16,15 @@ import (
 
 // Pokemon 구조체는 포켓몬 정보를 구성합니다.
 type Pokemon struct {
-	Name   string   `json:"name"`   // 이름
-	Number int      `json:"number"` // 전국도감 번호
-	Form   string   `json:"form"`   // 폼
-	Info   string   `json:"info"`   // 설명
-	Types  []string `json:"types"`  // 타입
-	ATK    int      `json:"atk"`    // 공격
-	DEF    int      `json:"def"`    // 방어
-	HP     int      `json:"hp"`     // 체력
+	Name     string   `json:"name"`     // 이름
+	Number   int      `json:"number"`   // 전국도감 번호
+	Form     string   `json:"form"`     // 폼
+	Classify string   `json:"classify"` // 분류
+	Info     string   `json:"info"`     // 설명
+	Types    []string `json:"types"`    // 타입
+	ATK      int      `json:"atk"`      // 공격
+	DEF      int      `json:"def"`      // 방어
+	HP       int      `json:"hp"`       // 체력
 
 	CPRank int `json:"cp_rank"` // CP 순위
 	MaxCP  int `json:"max_cp"`  // 최대 CP
@@ -33,11 +34,16 @@ type Pokemon struct {
 	// MaxCPInMaxWild                           int // 필드에서 최대 CP
 	// MaxCPInMaxWildWithWeatherBoost           int // 필드(날씨 부스트)에서 최대 CP
 
-	// BaseCaptureRate   float64 // 기본 포획률
-	// BaseFleeRate      float64 // 기본 도주율
-	// BuddyWalkDistance int     // 사탕을 얻기 위해 걸어야 하는 거리 (km)
+	BaseCaptureRate   float64 `json:"base_capture_rate"`   // 기본 포획률
+	BaseFleeRate      float64 `json:"base_flee_rate"`      // 기본 도주율
+	BuddyWalkDistance int     `json:"buddy_walk_distance"` // 사탕을 얻기 위해 걸어야 하는 거리 (km)
 
 	// CanShiny bool // 반짝이는 포켓몬 존재 여부
+
+	ImageURL string `json:"image_url"` // 이미지 주소
+
+	Evolution       []string `json:"evolution"`        // 진화
+	WeaknessesTypes []string `json:"weaknesses_types"` // 취약한 타입
 
 	// QuickSkillList  []*Skill   // 빠른 공격 목록
 	// ChargeSkillList []*Skill   // 주요 공격 목록
@@ -93,18 +99,40 @@ func main() {
 			})
 		})
 
+		evolution := []string{}
+		doc.Find(`div.evolution div.pokemon`).Each(func(i int, s *goquery.Selection) {
+			evolution = append(evolution, strings.TrimSpace(s.Text()))
+		})
+
+		weaknessesTypes := []string{}
+		breakpoint := ""
+		doc.Find(`table.weaknesses tbody tr`).Each(func(i int, s *goquery.Selection) {
+			if breakpoint != "" && breakpoint != s.Find(`span`).Text() {
+				return
+			}
+			breakpoint = s.Find(`span`).Text()
+			weaknessesTypes = append(weaknessesTypes, typeMap[strings.TrimSpace(s.Find(`a`).Text())])
+		})
+
 		pokemonList = append(pokemonList, &Pokemon{
-			Name:     strings.TrimSpace(doc.Find(`h1.mobile-hidden`).ReplaceWith("#forms").Text()),
-			Number:   stoInt(numberRe.FindStringSubmatch(string(b))),
-			Form:     getForm(doc.Find(`title`).Text()),
-			Info:     strings.Trim(strings.TrimSpace(doc.Find(`p.description`).Text()), `"`),
-			Types:    splitTypes(doc.Find(`div.large-type div`)),
-			ATK:      toInt(doc.Find(`.table-stats:first-child tr:nth-child(1) td:nth-child(2)`).Text()),
-			DEF:      toInt(doc.Find(`.table-stats:first-child tr:nth-child(2) td:nth-child(2)`).Text()),
-			HP:       toInt(doc.Find(`.table-stats:first-child tr:nth-child(3) td:nth-child(2)`).Text()),
-			CPRank:   toInt(doc.Find(`#cont > div > span > em`).Text()),
-			MaxCP:    toInt(doc.Find(`article.pokemon-stats table.table-stats:nth-child(3) tr:last-child td:nth-child(2)`).Contents().Not(`a`).Text()),
-			Counters: counters,
+			Name:              strings.TrimSpace(doc.Find(`h1.mobile-hidden`).Contents().Not("#forms").Text()),
+			Number:            stoInt(numberRe.FindStringSubmatch(string(b))),
+			Form:              getForm(doc.Find(`title`).Text()),
+			Classify:          classifyMap[strings.TrimSpace(doc.Find(`h1.mobile-hidden`).ReplaceWith("#forms").Text())],
+			Info:              strings.Trim(strings.TrimSpace(doc.Find(`p.description`).Text()), `"`),
+			Types:             splitTypes(doc.Find(`div.large-type div`)),
+			ATK:               toInt(doc.Find(`.table-stats:first-child tr:nth-child(1) td:nth-child(2)`).Text()),
+			DEF:               toInt(doc.Find(`.table-stats:first-child tr:nth-child(2) td:nth-child(2)`).Text()),
+			HP:                toInt(doc.Find(`.table-stats:first-child tr:nth-child(3) td:nth-child(2)`).Text()),
+			CPRank:            toInt(doc.Find(`#cont > div > span > em`).Text()),
+			MaxCP:             toInt(doc.Find(`article.pokemon-stats table.table-stats:nth-child(3) tr:last-child td:nth-child(2)`).Contents().Not(`a`).Text()),
+			BaseCaptureRate:   perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(1) td:last-child`).Text()),
+			BaseFleeRate:      perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(2) td:last-child`).Text()),
+			BuddyWalkDistance: kmToInt(doc.Find(`table.table-stats:last-child tr:nth-child(3) td:last-child`).Text()),
+			ImageURL:          `https://pokemon.gameinfo.io` + doc.Find(`article.images-block img`).First().AttrOr(`src`, ``),
+			Evolution:         evolution,
+			WeaknessesTypes:   weaknessesTypes,
+			Counters:          counters,
 		})
 
 		return nil
@@ -150,6 +178,11 @@ func splitTypes(s *goquery.Selection) []string {
 func perToFloat(s string) float64 {
 	i, _ := strconv.Atoi(strings.TrimSuffix(s, "%"))
 	return float64(i) / 100
+}
+
+func kmToInt(s string) int {
+	i, _ := strconv.Atoi(strings.TrimSuffix(s, " km"))
+	return i
 }
 
 func getForm(s string) string {
