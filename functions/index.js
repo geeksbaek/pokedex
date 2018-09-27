@@ -72,18 +72,18 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       }
 
       if (find.base_capture_rate >= 0.4) {
-        advice.push(`포획 난이도는 쉬운 편이다.`);
+        advice.push(`포획 난이도는 쉬운 편.`);
       } else if (find.base_capture_rate >= 0.2) {
-        advice.push(`포획 난이도는 보통인 편이다.`);
+        advice.push(`포획 난이도는 보통인 편.`);
       } else if (find.base_capture_rate >= 0.1) {
-        advice.push(`포획 난이도는 어려운 편이다.`);
+        advice.push(`포획 난이도는 어려운 편.`);
       } else if (find.base_capture_rate == 0) {
         advice.push(`이 포켓몬은 야생에서 만날 수 없는 것 같다.`);
       } else {
-        advice.push(`포획 난이도는 매우 어려운 편이므로 주의할 것!`);
+        advice.push(`포획 난이도는 매우 어려운 편.`);
       }
 
-      advice.push(`${find.types.join(", ")} 타입을 가지고 있다.`);
+      advice.push(`${find.types.join(", ")} 타입 포켓몬이다.`);
       agent.add(advice.join("\n"));
 
       // agent.add(
@@ -102,6 +102,10 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       });
       // agent.add(new Suggestion(`${pokemonName}의 타입`));
       agent.add(new Suggestion(`${pokemonName}의 카운터 포켓몬`));
+      // find.types.forEach(t => {
+      //   agent.add(new Suggestion(`${t} 타입 포켓몬`));
+      // });
+      agent.add(new Suggestion(`${find.types.join(", ")} 타입 포켓몬`));
       agent.add(new Suggestion(`알았어`));
     }
 
@@ -138,7 +142,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         return;
       }
 
-      const result = sort(find.counters);
+      const result = removeDups(sort(find.counters));
 
       agent.add(
         `${Josa.r(pokemonName, "은/는")} ${find.types.join(
@@ -150,14 +154,27 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
 
       agent.add(new Image(find.image_url));
 
+      let advice = [];
+
+      result.filter((v, i) => i < 3).forEach(v => {
+        advice.push(
+          `${v.quick_skill}·${Josa.r(v.charge_skill, "을/를")} 사용하는 ${
+            v.form == "캐스퐁" ? v.name : v.form + " 폼 " + v.name
+          }`
+        );
+      });
+
       agent.add(
-        `${pokemonName}에게 가장 강한 포켓몬은 ${
-          result[0].quick_skill
-        }, ${Josa.r(result[0].charge_skill, "을/를")} 사용하는 ${
-          result[0].name
-        }이다.`
+        `${pokemonName}의 카운터 포켓몬은 ${advice.join(", ")} 등이 있다.`
       );
-      agent.add(new Suggestion(`${result[0].name}`));
+
+      result.filter((v, i) => i < 3).forEach(v => {
+        agent.add(new Suggestion(`${v.name}`));
+      });
+      agent.add(new Suggestion(`${find.types.join(", ")} 타입 포켓몬`));
+      agent.add(
+        new Suggestion(`${find.weaknesses_types.join(", ")} 타입 포켓몬`)
+      );
       agent.add(new Suggestion(`알았어`));
     }
 
@@ -169,6 +186,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         agent.add(
           `현재까지 발견된 포켓몬은 많아도 2개의 타입밖에 가질 수 없다.`
         );
+        types.forEach(v => {
+          agent.add(new Suggestion(`${v} 타입 포켓몬`));
+        });
         return;
       }
 
@@ -178,23 +198,21 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
 
       if (selected.length == 0) {
         agent.add(`${types.join(", ")} 타입을 가지는 포켓몬은 없는 듯 하다...`);
+        types.forEach(v => {
+          agent.add(new Suggestion(`${v} 타입 포켓몬`));
+        });
         return;
       }
       selected = sort(selected);
 
       agent.add(
-        `${types.join(", ")} 타입을 가지는 ${
-          selected.length
-        }마리의 포켓몬이 존재한다.`
-      );
-      agent.add(
-        `${selected
-          .slice(0, selected.length >= 5 ? 5 : selected.length)
+        `${types.join(", ")} 타입을 가지는 포켓몬은 ${selected
+          .filter((v, i) => i < 5)
           .map(v => v.name)
-          .join(", ")}...`
+          .join(", ")} 등 ${selected.length}마리의 포켓몬이 있다.`
       );
 
-      selected.forEach(v => {
+      selected.filter((v, i) => i < 5).forEach(v => {
         agent.add(new Suggestion(v.name));
       });
       agent.add(new Suggestion(`알았어`));
@@ -311,4 +329,15 @@ function sort(pokemons) {
     }
     return pokemonB.max_cp - pokemonA.max_cp;
   });
+}
+
+function removeDups(pokemons) {
+  let ret = [];
+  pokemons.forEach(v1 => {
+    if (ret.find(v2 => v2.name == v1.name && v2.form == v1.form)) {
+      return;
+    }
+    ret.push(v1);
+  });
+  return ret;
 }
