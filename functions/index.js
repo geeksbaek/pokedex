@@ -159,21 +159,22 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       agent.add(new Image(find.image_url));
 
       let advice = [];
+      let weaknessesName = [];
 
       result.filter((v, i) => i < 3).forEach(v => {
+        let name = v.form == "캐스퐁" ? v.name : `${v.form} 폼 ${v.name}`;
         advice.push(
-          `${v.quick_skill}·${Josa.r(v.charge_skill, "을/를")} 사용하는 ${
-            v.form == "캐스퐁" ? v.name : v.form + " 폼 " + v.name
-          }`
+          `${v.quick_skill}·${Josa.r(v.charge_skill, "을/를")} 사용하는 ${name}`
         );
+        weaknessesName.push(name);
       });
 
       agent.add(
         `${pokemonName}의 카운터 포켓몬은 ${advice.join(", ")} 등이 있다.`
       );
 
-      result.filter((v, i) => i < 3).forEach(v => {
-        agent.add(new Suggestion(`${v.name}`));
+      weaknessesName.forEach(name => {
+        agent.add(new Suggestion(`${name}`));
       });
       agent.add(new Suggestion(`${find.types.join(", ")} 타입 포켓몬`));
       agent.add(
