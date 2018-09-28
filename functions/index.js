@@ -60,15 +60,19 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
 
       let strength = find.cp_rank / pokedex.length;
       if (strength < 0.1) {
-        advice.push(`이 포켓몬은 매우 강한 것 같다!`);
+        advice.push(`이 포켓몬의 최대 CP는 ${find.max_cp}! 매우 강한 것 같다!`);
       } else if (strength < 0.2) {
-        advice.push(`이 포켓몬은 꽤 강한 것 같다!`);
+        advice.push(`이 포켓몬의 최대 CP는 ${find.max_cp}! 꽤 강한 것 같다.`);
       } else if (strength < 0.3) {
-        advice.push(`이 포켓몬의 강함은 보통인 것 같다.`);
+        advice.push(`이 포켓몬의 최대 CP는 ${find.max_cp}. 보통인 것 같다.`);
       } else if (strength < 0.6) {
-        advice.push(`이 포켓몬은 그다지 강한 것 같지 않다.`);
+        advice.push(
+          `이 포켓몬의 최대 CP는 ${find.max_cp}. 그다지 강해 보이지 않는다.`
+        );
       } else {
-        advice.push(`이 포켓몬은 싸움과는 거리가 먼 것 같다.`);
+        advice.push(
+          `이 포켓몬의 최대 CP는 ${find.max_cp}. 싸움과는 거리가 먼 것 같다.`
+        );
       }
 
       if (find.base_capture_rate >= 0.4) {
