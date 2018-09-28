@@ -235,7 +235,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       );
 
       selected.filter((v, i) => i < 5).forEach(v => {
-        agent.add(new Suggestion(v.name));
+        agent.add(
+          new Suggestion(v.form == "캐스퐁" ? v.name : `${v.form} 폼 ${v.name}`)
+        );
       });
       agent.add(new Suggestion(`알았어`));
     }
