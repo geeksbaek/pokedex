@@ -230,7 +230,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       agent.add(
         `${types.join(", ")} 타입을 가지는 포켓몬은 ${selected
           .filter((v, i) => i < 5)
-          .map(v => v.name)
+          .map(v => (v.form == "캐스퐁" ? v.name : `${v.form} 폼 ${v.name}`))
           .join(", ")} 등 ${selected.length}마리의 포켓몬이 있다.`
       );
 
