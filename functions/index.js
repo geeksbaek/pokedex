@@ -102,8 +102,15 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       // );
 
       find.evolution.forEach(name => {
-        agent.add(new Suggestion(name));
+        pokedex.filter(v => v.name == name).forEach(v => {
+          if (v.form == "캐스퐁") {
+            agent.add(new Suggestion(name));
+          } else {
+            agent.add(new Suggestion(`${v.form} 폼 ${name}`));
+          }
+        });
       });
+
       // agent.add(new Suggestion(`${pokemonName}의 타입`));
       agent.add(new Suggestion(`${pokemonName}의 카운터 포켓몬`));
       // find.types.forEach(t => {
