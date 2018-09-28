@@ -44,6 +44,12 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
           pokemonComposite["pokemon-list"]
         }`;
 
+      const pokemonNameSub =
+        pokemonSimple ||
+        `${pokemonComposite["pokemon-list"]} (${
+          pokemonComposite["pokemon-form-type-list"]
+        }의 모습)`;
+
       if (!find) {
         if (pokemonSimple || pokemonComposite) {
           agent.add(`${pokemonName}라는 포켓몬은 없는 듯 하다...`);
@@ -53,7 +59,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         return;
       }
 
-      let card = new Card({ title: pokemonName });
+      let card = new Card({ title: pokemonNameSub });
       if (find.classify) {
         card.setText(`${find.classify}.  \n${find.info}`);
       } else {
@@ -135,6 +141,12 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
           pokemonComposite["pokemon-list"]
         }`;
 
+      const pokemonNameSub =
+        pokemonSimple ||
+        `${pokemonComposite["pokemon-list"]} (${
+          pokemonComposite["pokemon-form-type-list"]
+        }의 모습)`;
+
       if (!find) {
         if (pokemonSimple || pokemonComposite) {
           agent.add(`${pokemonName}라는 포켓몬은 없는 듯 하다...`);
@@ -170,7 +182,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
 
       agent.add(
         new Card({
-          title: pokemonName,
+          title: pokemonNameSub,
           imageUrl: find.image_url,
           text: `${pokemonName}의 카운터 포켓몬은 ${advice.join(
             ", "
@@ -352,14 +364,6 @@ function removeDups(pokemons) {
   return ret;
 }
 
-let precomputedCounterMap = {};
-
-function getCounter(name, form) {
-  let pokemon = pokedex.find(v => v.name == name && v.form == form);
-
-  pokedex.map(v => {});
-}
-
 function josa_ro(num) {
   switch (num % 10) {
     case 3:
@@ -368,4 +372,16 @@ function josa_ro(num) {
       return `${num}으로`;
   }
   return `${num}로`;
+}
+
+let cachedCounterMap = {};
+
+function getCounter(name, form) {
+  let pokemon = pokedex.find(v => v.name == name && v.form == form);
+
+  if (cachedCounterMap[[name, form].join(":")]) {
+    return cachedCounterMap[[name, form].join(":")];
+  }
+
+  pokedex.map(v => {});
 }
