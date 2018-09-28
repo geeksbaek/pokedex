@@ -82,7 +82,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       } else if (find.base_capture_rate >= 0.1) {
         advice.push(`포획 난이도는 어려운 편.`);
       } else if (find.base_capture_rate == 0) {
-        advice.push(`이 포켓몬은 야생에서 만날 수 없는 것 같다.`);
+        advice.push(`이 포켓몬은 진화를 통해서만 얻을 수 있는 것 같다.`);
       } else {
         advice.push(`포획 난이도는 매우 어려운 편.`);
       }
