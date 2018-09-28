@@ -45,16 +45,18 @@ type Pokemon struct {
 	Evolution       []string `json:"evolution"`        // 진화
 	WeaknessesTypes []string `json:"weaknesses_types"` // 취약한 타입
 
-	// QuickSkillList  []*Skill   // 빠른 공격 목록
-	// ChargeSkillList []*Skill   // 주요 공격 목록
-	Counters []*Counter `json:"counters"` // 카운터 포켓몬
+	QuickSkillList  []*Skill   // 빠른 공격 목록
+	ChargeSkillList []*Skill   // 주요 공격 목록
+	Counters        []*Counter `json:"counters"` // 카운터 포켓몬
 }
 
 // Skill 구조체는 스킬 정보를 구성합니다.
 type Skill struct {
-	Name string  // 스킬 이름
-	Type string  // 스킬 속성
-	DPS  float64 // 스킬 초당 공격력
+	Name  string  // 스킬 이름
+	Type  string  // 스킬 속성
+	DPS   float64 // 스킬 초당 공격력
+	Stab  bool    // 자속 여부
+	Event bool    // 이벤트 스킬 여부
 }
 
 // Counter 구조체는 카운터 정보를 구성합니다.
@@ -87,6 +89,26 @@ func main() {
 		if err != nil {
 			return err
 		}
+
+		quickSkillList := []*Skill{}
+		doc.Find(`article.all-moves table.moves:first-child tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
+			t := s.Find(`td:first-child span`).AttrOr(`data-type`, ``)
+			name := strings.TrimSpace(s.Find(`td:first-child a`).Text())
+			dps := sToFloat(s.Find(`td:last-child`).Text())
+			isStab := s.HasClass(`stab`)
+			isEvent := s.HasClass(`event`)
+			quickSkillList = append(quickSkillList, &Skill{t, name, dps, isStab, isEvent})
+		})
+
+		chargeSkillList := []*Skill{}
+		doc.Find(`article.all-moves table.moves:last-child tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
+			t := s.Find(`td:first-child span`).AttrOr(`data-type`, ``)
+			name := strings.TrimSpace(s.Find(`td:first-child a`).Text())
+			dps := sToFloat(s.Find(`td:last-child`).Text())
+			isStab := s.HasClass(`stab`)
+			isEvent := s.HasClass(`event`)
+			chargeSkillList = append(chargeSkillList, &Skill{t, name, dps, isStab, isEvent})
+		})
 
 		counters := []*Counter{}
 		doc.Find(`table.table-counter.all tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
@@ -132,6 +154,8 @@ func main() {
 			ImageURL:          getImageURL(doc),
 			Evolution:         evolution,
 			WeaknessesTypes:   weaknessesTypes,
+			QuickSkillList:    quickSkillList,
+			ChargeSkillList:   chargeSkillList,
 			Counters:          counters,
 		})
 
@@ -173,6 +197,11 @@ func splitTypes(s *goquery.Selection) []string {
 		ret = append(ret, typeMap[s.Text()])
 	})
 	return ret
+}
+
+func sToFloat(s string) float64 {
+	f, _ := strconv.ParseFloat(s, 64)
+	return f
 }
 
 func perToFloat(s string) float64 {
