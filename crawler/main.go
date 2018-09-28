@@ -129,7 +129,7 @@ func main() {
 			BaseCaptureRate:   perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(1) td:last-child`).Text()),
 			BaseFleeRate:      perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(2) td:last-child`).Text()),
 			BuddyWalkDistance: kmToInt(doc.Find(`table.table-stats:last-child tr:nth-child(3) td:last-child`).Text()),
-			ImageURL:          `https://pokemon.gameinfo.io` + doc.Find(`article.images-block img`).First().AttrOr(`src`, ``),
+			ImageURL:          getImageURL(doc),
 			Evolution:         evolution,
 			WeaknessesTypes:   weaknessesTypes,
 			Counters:          counters,
@@ -199,4 +199,11 @@ func trimName(s string) string {
 	s = strings.TrimSuffix(s, " (캐스퐁의 모습)")
 	s = strings.TrimSuffix(s, " (알로라의 모습)")
 	return s
+}
+
+func getImageURL(doc *goquery.Document) string {
+	if doc.Find(`article.forms-block div.forms a.form`).Length() >= 2 {
+		return `https://pokemon.gameinfo.io` + doc.Find(`article.forms-block div.forms a.form.active img`).AttrOr(`src`, ``)
+	}
+	return `https://pokemon.gameinfo.io` + doc.Find(`article.images-block img`).First().AttrOr(`src`, ``)
 }
