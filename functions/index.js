@@ -154,21 +154,28 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         )} 타입의 공격에 특히 취약하다.`
       );
 
-      agent.add(new Image(find.image_url));
-
       let advice = [];
       let weaknessesName = [];
 
       result.filter((v, i) => i < 3).forEach(v => {
         let name = v.form == "캐스퐁" ? v.name : `${v.form} 폼 ${v.name}`;
         advice.push(
-          `${v.quick_skill}·${Josa.r(v.charge_skill, "을/를")} 사용하는 ${name}`
+          `${v.quick_skill}·${Josa.r(
+            v.charge_skill,
+            "을/를"
+          )} 사용하는 **${name}**`
         );
         weaknessesName.push(name);
       });
 
       agent.add(
-        `${pokemonName}의 카운터 포켓몬은 ${advice.join(", ")} 등이 있다.`
+        new Card({
+          title: pokemonName,
+          imageUrl: find.image_url,
+          text: `${pokemonName}의 카운터 포켓몬은 ${advice.join(
+            ", "
+          )} 등이 있다.`
+        })
       );
 
       weaknessesName.forEach(name => {
