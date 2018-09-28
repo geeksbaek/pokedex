@@ -5,7 +5,12 @@
 const functions = require("firebase-functions");
 const Josa = require("josa-js");
 const fs = require("fs");
-const { WebhookClient, Image, Suggestion } = require("dialogflow-fulfillment");
+const {
+  WebhookClient,
+  Card,
+  Image,
+  Suggestion
+} = require("dialogflow-fulfillment");
 
 process.env.DEBUG = "dialogflow:*"; // enables lib debugging statements
 const pokedex = JSON.parse(fs.readFileSync("data.json", "utf8"));
@@ -48,59 +53,50 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         return;
       }
 
+      let card = new Card({ title: pokemonName });
       if (find.classify) {
-        agent.add(`${pokemonName}. ${find.classify}.\n${find.info}`);
+        card.setText(`${find.classify}.  \n${find.info}`);
       } else {
-        agent.add(`${pokemonName}.\n${find.info}`);
+        card.setText(`${find.info}`);
       }
-
-      agent.add(new Image(find.image_url));
+      card.setImage(find.image_url);
 
       let advice = [];
+      advice.push(`${pokemonName}. ${find.types.join(", ")} 타입 포켓몬.`);
 
       let strength = find.cp_rank / pokedex.length;
       if (strength < 0.1) {
-        advice.push(`이 포켓몬의 최대 CP는 ${find.max_cp}! 매우 강한 것 같다!`);
+        advice.push(`최대 CP는 ${josa_ro(find.max_cp)} 매우 강한 것 같다!`);
       } else if (strength < 0.2) {
-        advice.push(`이 포켓몬의 최대 CP는 ${find.max_cp}! 꽤 강한 것 같다.`);
+        advice.push(`최대 CP는 ${josa_ro(find.max_cp)} 꽤 강한 것 같다.`);
       } else if (strength < 0.3) {
-        advice.push(`이 포켓몬의 최대 CP는 ${find.max_cp}. 보통인 것 같다.`);
+        advice.push(`최대 CP는 ${josa_ro(find.max_cp)} 보통인 것 같다.`);
       } else if (strength < 0.6) {
         advice.push(
-          `이 포켓몬의 최대 CP는 ${find.max_cp}. 그다지 강해 보이지 않는다.`
+          `최대 CP는 ${josa_ro(find.max_cp)} 그다지 강해 보이지 않는다.`
         );
       } else {
         advice.push(
-          `이 포켓몬의 최대 CP는 ${find.max_cp}. 싸움과는 거리가 먼 것 같다.`
+          `최대 CP는 ${josa_ro(find.max_cp)} 배틀과는 거리가 멀어 보인다.`
         );
       }
 
       if (find.base_capture_rate >= 0.4) {
-        advice.push(`포획 난이도는 쉬운 편.`);
+        advice.push(`포획 난이도는 쉬운 편이다.`);
       } else if (find.base_capture_rate >= 0.2) {
-        advice.push(`포획 난이도는 보통인 편.`);
+        advice.push(`포획 난이도는 보통인 편이다.`);
       } else if (find.base_capture_rate >= 0.1) {
-        advice.push(`포획 난이도는 어려운 편.`);
+        advice.push(`포획 난이도는 어려운 편이다.`);
       } else if (find.base_capture_rate == 0) {
-        advice.push(`이 포켓몬은 진화를 통해서만 얻을 수 있는 것 같다.`);
+        advice.push(`이 포켓몬은 진화로만 얻을 수 있는 것 같다.`);
       } else {
-        advice.push(`포획 난이도는 매우 어려운 편.`);
+        advice.push(`포획 난이도는 매우 어려운 편이다.`);
       }
 
-      advice.push(`${find.types.join(", ")} 타입 포켓몬이다.`);
       agent.add(advice.join("\n"));
+      agent.add(card);
 
-      // agent.add(
-      //   new Card({
-      //     title: pokemonName,
-      //     imageUrl: find.image_url,
-      //     buttonText: "pokemon.gameinfo.io 에서 자세히 보기",
-      //     buttonUrl: `https://pokemon.gameinfo.io/ko/pokemon/${
-      //       find.number
-      //     }/${formToParam(find.form)}`
-      //   })
-      // );
-
+      agent.add(new Suggestion(`${pokemonName}의 카운터 포켓몬`));
       find.evolution.forEach(name => {
         pokedex.filter(v => v.name == name).forEach(v => {
           if (v.form == "캐스퐁") {
@@ -111,11 +107,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         });
       });
 
-      // agent.add(new Suggestion(`${pokemonName}의 타입`));
-      agent.add(new Suggestion(`${pokemonName}의 카운터 포켓몬`));
-      // find.types.forEach(t => {
-      //   agent.add(new Suggestion(`${t} 타입 포켓몬`));
-      // });
       agent.add(new Suggestion(`${find.types.join(", ")} 타입 포켓몬`));
       agent.add(new Suggestion(`알았어`));
     }
@@ -352,4 +343,22 @@ function removeDups(pokemons) {
     ret.push(v1);
   });
   return ret;
+}
+
+let precomputedCounterMap = {};
+
+function getCounter(name, form) {
+  let pokemon = pokedex.find(v => v.name == name && v.form == form);
+
+  pokedex.map(v => {});
+}
+
+function josa_ro(num) {
+  switch (num % 10) {
+    case 3:
+    case 6:
+    case 0:
+      return `${num}으로`;
+  }
+  return `${num}로`;
 }
