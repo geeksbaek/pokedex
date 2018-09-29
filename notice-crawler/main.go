@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -49,8 +48,10 @@ func posts(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 	defer f.Close()
-	w.Header().Set("Content-Type", "application/json")
-	io.Copy(w, f)
+
+	posts := []*Post{}
+	json.NewDecoder(f).Decode(&posts)
+	json.NewEncoder(w).Encode(posts)
 }
 
 func fetchPost() {
