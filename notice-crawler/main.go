@@ -29,8 +29,10 @@ type Post struct {
 func main() {
 	fetchPost()
 
-	gocron.Every(1).Hour().Do(fetchPost)
-	<-gocron.Start()
+	go func() {
+		gocron.Every(1).Hour().Do(fetchPost)
+		<-gocron.Start()
+	}()
 
 	router := httprouter.New()
 	router.GET("/posts", posts)
