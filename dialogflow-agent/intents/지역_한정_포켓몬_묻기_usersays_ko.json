@@ -1,0 +1,62 @@
+[
+  {
+    "id": "cc65094e-361c-404d-9cde-66614f35a324",
+    "data": [
+      {
+        "text": "지역 포켓몬",
+        "alias": "question-regional",
+        "meta": "@question-regional",
+        "userDefined": false
+      },
+      {
+        "text": " 뭐뭐 있냐",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "e5451708-92df-40fd-989d-dda0b9592293",
+    "data": [
+      {
+        "text": "지역 포켓몬",
+        "alias": "question-regional",
+        "meta": "@question-regional",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "f9ee8b59-bab5-431d-a480-675d385340b1",
+    "data": [
+      {
+        "text": "지역 한정 포켓몬",
+        "alias": "question-regional",
+        "meta": "@question-regional",
+        "userDefined": false
+      },
+      {
+        "text": " 알려줘",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "ba1cafd5-d12f-42be-bf59-b2557f018663",
+    "data": [
+      {
+        "text": "지역 한정 포켓몬",
+        "alias": "question-regional",
+        "meta": "@question-regional",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  }
+]

@@ -1,19 +1,26 @@
 {
-  "id": "8629ec8e-1295-469b-ad8e-70fdf46c6797",
-  "name": "Default Welcome Intent",
+  "id": "9bc3ae52-ac7d-4332-94bc-3016d96622a9",
+  "name": "환상의_포켓몬_묻기",
   "auto": true,
   "contexts": [],
   "responses": [
     {
       "resetContexts": false,
-      "action": "input.welcome",
       "affectedContexts": [],
-      "parameters": [],
+      "parameters": [
+        {
+          "id": "d2a6d595-fe51-451c-9aec-eb53bf4026d1",
+          "dataType": "@question-mythical",
+          "name": "question-mythical",
+          "value": "$question-mythical",
+          "isList": false
+        }
+      ],
       "messages": [
         {
           "type": 0,
           "lang": "ko",
-          "speech": "안녕하세요. 포켓몬 도감입니다. 궁금하신 포켓몬의 이름이나 번호를 말씀해주세요."
+          "speech": []
         }
       ],
       "defaultResponsePlatforms": {},
@@ -24,9 +31,5 @@
   "webhookUsed": true,
   "webhookForSlotFilling": false,
   "fallbackIntent": false,
-  "events": [
-    {
-      "name": "WELCOME"
-    }
-  ]
+  "events": []
 }

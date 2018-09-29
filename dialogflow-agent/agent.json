@@ -6,11 +6,27 @@
   "googleAssistant": {
     "googleAssistantCompatible": true,
     "welcomeIntentSignInRequired": false,
-    "startIntents": [],
+    "startIntents": [
+      {
+        "intentId": "e55fac48-7aae-4045-9689-65034061e480",
+        "signInRequired": false
+      },
+      {
+        "intentId": "8bc02b1f-f6c4-4baa-a7cb-f3db901de4d6",
+        "signInRequired": false
+      },
+      {
+        "intentId": "624d48a4-eb2a-42f8-a861-04b518a4f1b3",
+        "signInRequired": false
+      },
+      {
+        "intentId": "f851fc5c-49f1-4931-aed4-9dbd61a83602",
+        "signInRequired": false
+      }
+    ],
     "systemIntents": [],
     "endIntentIds": [
-      "cd3c1e96-11b5-4550-b1f3-b4377bcadee9",
-      "8bc02b1f-f6c4-4baa-a7cb-f3db901de4d6"
+      "cd3c1e96-11b5-4550-b1f3-b4377bcadee9"
     ],
     "oAuthLinking": {
       "required": false,
@@ -19,6 +35,7 @@
     "voiceType": "MALE_1",
     "capabilities": [],
     "protocolVersion": "V2",
+    "autoPreviewEnabled": true,
     "isDeviceAgent": false
   },
   "defaultTimezone": "Asia/Tokyo",

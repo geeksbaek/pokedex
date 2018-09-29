@@ -1,0 +1,66 @@
+[
+  {
+    "id": "5006ea56-bff7-4bf1-8dd4-40e18d0bd83b",
+    "data": [
+      {
+        "text": "전설의 포켓몬",
+        "alias": "question-legendary",
+        "meta": "@question-legendary",
+        "userDefined": false
+      },
+      {
+        "text": " 목록",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "3a567908-a69e-4853-9302-3673f52baa19",
+    "data": [
+      {
+        "text": "전설의 포켓몬",
+        "alias": "question-legendary",
+        "meta": "@question-legendary",
+        "userDefined": false
+      },
+      {
+        "text": " 뭐가 있지",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "91f1ff57-0803-4c09-a138-1c1eb24f1572",
+    "data": [
+      {
+        "text": "전설 포켓몬",
+        "alias": "question-legendary",
+        "meta": "@question-legendary",
+        "userDefined": false
+      },
+      {
+        "text": " 알려줘",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "70e57213-1dcc-439b-9f5b-3efc15b5a97c",
+    "data": [
+      {
+        "text": "전설의 포켓몬",
+        "alias": "question-legendary",
+        "meta": "@question-legendary",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  }
+]

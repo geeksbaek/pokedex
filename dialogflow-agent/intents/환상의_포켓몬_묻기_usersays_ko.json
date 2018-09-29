@@ -1,0 +1,96 @@
+[
+  {
+    "id": "9a5162a0-5129-4cb8-8c9b-28b9a6172ae8",
+    "data": [
+      {
+        "text": "환상의 포켓몬",
+        "alias": "question-mythical",
+        "meta": "@question-mythical",
+        "userDefined": false
+      },
+      {
+        "text": " 목록",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "7d3f6ecb-ea8e-43f5-99bc-1ce150e8529b",
+    "data": [
+      {
+        "text": "환상의 포켓몬",
+        "alias": "question-mythical",
+        "meta": "@question-mythical",
+        "userDefined": false
+      },
+      {
+        "text": " 뭐뭐 있어?",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "6a21721c-4931-4ccc-93ab-909b5d60912f",
+    "data": [
+      {
+        "text": "환상 포켓몬",
+        "alias": "question-mythical",
+        "meta": "@question-mythical",
+        "userDefined": false
+      },
+      {
+        "text": " 알려줘",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "0da99782-d68b-4b79-baa2-440aaa574677",
+    "data": [
+      {
+        "text": "환상 포켓몬",
+        "alias": "question-mythical",
+        "meta": "@question-mythical",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "bb69c737-f389-4959-bce1-9ed37a167dcd",
+    "data": [
+      {
+        "text": "환상의 포켓몬",
+        "alias": "question-mythical",
+        "meta": "@question-mythical",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "453fee53-51ba-416f-bcab-41ca6f81fd4d",
+    "data": [
+      {
+        "text": "환상의 포켓몬",
+        "alias": "question-mythical",
+        "meta": "@question-mythical",
+        "userDefined": false
+      },
+      {
+        "text": " 알려줘",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  }
+]
