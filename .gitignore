@@ -1,4 +1,5 @@
 node_modules
 raws
-crawler/crawler*
+*.exe
 firebase-debug.log
+posts.json
