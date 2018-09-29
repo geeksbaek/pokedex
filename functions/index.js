@@ -25,85 +25,53 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
 
     // 포켓몬 묻기
     function questionAboutPokemonHandler(agent) {
-      const pokemonSimple = agent.parameters["pokemon-list"];
-      const pokemonComposite = agent.parameters["pokemon-composite-list"];
-      const find = pokedex.find(v => {
-        if (pokemonSimple) {
-          return v.name == pokemonSimple && v.form == "캐스퐁";
-        } else if (pokemonComposite) {
-          return (
-            v.name == pokemonComposite["pokemon-list"] &&
-            v.form == pokemonComposite["pokemon-form-type-list"]
-          );
-        }
-      });
+      const find = search(agent);
 
-      const pokemonName =
-        pokemonSimple ||
-        `${pokemonComposite["pokemon-form-type-list"]} 폼 ${
-          pokemonComposite["pokemon-list"]
-        }`;
-
-      const pokemonNameSub =
-        pokemonSimple ||
-        `${pokemonComposite["pokemon-list"]} (${
-          pokemonComposite["pokemon-form-type-list"]
-        }의 모습)`;
-
-      if (!find) {
-        if (pokemonSimple || pokemonComposite) {
-          agent.add(`${pokemonName}라는 포켓몬은 없는 듯 하다...`);
-        } else {
-          agent.add(`그런 이름의 포켓몬은 없는 듯 하다...`);
-        }
+      if (!find.pokemon) {
+        agent.add(`그런 이름의 포켓몬은 없는 듯 하다...`);
         return;
       }
 
-      let card = new Card({ title: pokemonNameSub });
-      if (find.classify) {
-        card.setText(`${find.classify}.  \n${find.info}`);
+      let card = new Card({ title: find.formattedName });
+      if (find.pokemon.classify) {
+        card.setText(`${find.pokemon.classify}.  \n${find.pokemon.info}`);
       } else {
-        card.setText(`${find.info}`);
+        card.setText(`${find.pokemon.info}`);
       }
-      card.setImage(find.image_url);
+      card.setImage(find.pokemon.image_url);
 
       let advice = [];
-      advice.push(`${pokemonName}. ${find.types.join(", ")} 타입 포켓몬.`);
+      advice.push(
+        `${find.name}. ${find.pokemon.types.join(", ")} 타입 포켓몬.`
+      );
 
-      let strength = find.cp_rank / pokedex.length;
-      if (strength < 0.1) {
-        advice.push(`최대 CP는 ${josa_ro(find.max_cp)} 매우 강한 것 같다!`);
-      } else if (strength < 0.2) {
-        advice.push(`최대 CP는 ${josa_ro(find.max_cp)} 꽤 강한 것 같다.`);
-      } else if (strength < 0.3) {
-        advice.push(`최대 CP는 ${josa_ro(find.max_cp)} 보통인 것 같다.`);
-      } else if (strength < 0.6) {
-        advice.push(
-          `최대 CP는 ${josa_ro(find.max_cp)} 그다지 강해 보이지 않는다.`
-        );
-      } else {
-        advice.push(
-          `최대 CP는 ${josa_ro(find.max_cp)} 배틀과는 거리가 멀어 보인다.`
-        );
-      }
+      let tier = ["S", "A", "B", "C", "D", "E", "F"][
+        find.pokemon.max_cp / 500 >= 6
+          ? 0
+          : 6 - parseInt(find.pokemon.max_cp / 500)
+      ];
 
-      if (find.base_capture_rate >= 0.4) {
+      advice.push(`최대 CP ${find.pokemon.max_cp}의 ${tier}등급 포켓몬이다.`);
+
+      if (find.pokemon.base_capture_rate >= 0.4) {
         advice.push(`포획 난이도는 쉬운 편이다.`);
-      } else if (find.base_capture_rate >= 0.2) {
+      } else if (find.pokemon.base_capture_rate >= 0.2) {
         advice.push(`포획 난이도는 보통인 편이다.`);
-      } else if (find.base_capture_rate >= 0.1) {
+      } else if (find.pokemon.base_capture_rate >= 0.1) {
         advice.push(`포획 난이도는 어려운 편이다.`);
-      } else if (find.base_capture_rate == 0) {
-        advice.push(`이 포켓몬은 진화로만 얻을 수 있는 것 같다.`);
+      } else if (find.pokemon.base_capture_rate >= 0.05) {
+        advice.push(`포획 난이도는 아주 어려운 편이다.`);
+      } else if (find.pokemon.base_capture_rate == 0) {
+        advice.push(`이 포켓몬은 야생에서 만날 수 없는 것 같다.`);
       } else {
-        advice.push(`포획 난이도는 매우 어려운 편이다.`);
+        advice.push(`포획 난이도는 아주 아주 어려운 편이다.`);
       }
 
       agent.add(advice.join("\n"));
       agent.add(card);
 
-      agent.add(new Suggestion(`${pokemonName}의 카운터 포켓몬`));
-      find.evolution.forEach(name => {
+      agent.add(new Suggestion(`${find.name}의 카운터 포켓몬`));
+      find.pokemon.evolution.forEach(name => {
         pokedex.filter(v => v.name == name).forEach(v => {
           if (v.form == "캐스퐁") {
             agent.add(new Suggestion(name));
@@ -113,7 +81,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         });
       });
 
-      agent.add(new Suggestion(`${find.types.join(", ")} 타입 포켓몬`));
+      agent.add(new Suggestion(`${find.pokemon.types.join(", ")} 타입 포켓몬`));
       agent.add(new Suggestion(`알았어`));
     }
 
@@ -122,48 +90,21 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
 
     // 포켓몬의 카운터 묻기
     function questionCounterOfPokemonHandler(agent) {
-      const pokemonSimple = agent.parameters["pokemon-list"];
-      const pokemonComposite = agent.parameters["pokemon-composite-list"];
-      const find = pokedex.find(v => {
-        if (pokemonSimple) {
-          return v.name == pokemonSimple && v.form == "캐스퐁";
-        } else if (pokemonComposite) {
-          return (
-            v.name == pokemonComposite["pokemon-list"] &&
-            v.form == pokemonComposite["pokemon-form-type-list"]
-          );
-        }
-      });
+      const find = search(agent);
 
-      const pokemonName =
-        pokemonSimple ||
-        `${pokemonComposite["pokemon-form-type-list"]} 폼 ${
-          pokemonComposite["pokemon-list"]
-        }`;
-
-      const pokemonNameSub =
-        pokemonSimple ||
-        `${pokemonComposite["pokemon-list"]} (${
-          pokemonComposite["pokemon-form-type-list"]
-        }의 모습)`;
-
-      if (!find) {
-        if (pokemonSimple || pokemonComposite) {
-          agent.add(`${pokemonName}라는 포켓몬은 없는 듯 하다...`);
-        } else {
-          agent.add(`그런 이름의 포켓몬은 없는 듯 하다...`);
-        }
+      if (!find.pokemon) {
+        agent.add(`그런 이름의 포켓몬은 없는 듯 하다...`);
         return;
       }
 
-      const result = removeDups(sort(find.counters));
+      const result = removeDups(sort(find.pokemon.counters));
 
       agent.add(
-        `${Josa.r(pokemonName, "은/는")} ${find.types.join(
+        `${Josa.r(find.name, "은/는")} ${find.pokemon.types.join(
           ", "
-        )} 타입 포켓몬이며, ${find.weaknesses_types.join(
+        )} 타입 포켓몬이며, ${find.pokemon.weaknesses_types.join(
           ", "
-        )} 타입의 공격에 특히 취약하다.`
+        )} 타입 공격에 특히 취약하다.`
       );
 
       let advice = [];
@@ -182,20 +123,20 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
 
       agent.add(
         new Card({
-          title: pokemonNameSub,
-          imageUrl: find.image_url,
-          text: `${pokemonName}의 카운터 포켓몬은 ${advice.join(
-            ", "
-          )} 등이 있다.`
+          title: find.formattedName,
+          imageUrl: find.pokemon.image_url,
+          text: `${find.name}의 카운터 포켓몬은 ${advice.join(", ")} 등이 있다.`
         })
       );
 
       weaknessesName.forEach(name => {
         agent.add(new Suggestion(`${name}`));
       });
-      agent.add(new Suggestion(`${find.types.join(", ")} 타입 포켓몬`));
+      agent.add(new Suggestion(`${find.pokemon.types.join(", ")} 타입 포켓몬`));
       agent.add(
-        new Suggestion(`${find.weaknesses_types.join(", ")} 타입 포켓몬`)
+        new Suggestion(
+          `${find.pokemon.weaknesses_types.join(", ")} 타입 포켓몬`
+        )
       );
       agent.add(new Suggestion(`알았어`));
     }
@@ -263,21 +204,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         return;
       }
 
-      // let list = new List({
-      //   title: "포켓몬 도감 검색 결과"
-      // });
-
       pokemonSimpleList.forEach(pokemon => {
-        // let find = simpleResult.find(v => v.name == pokemon);
-
-        // list[pokemon] = {
-        //   title: pokemon,
-        //   description: `${find.types.join(", ")}  타입의 포켓몬이다.`,
-        //   image: new Image({
-        //     url: find.image_url,
-        //     alt: pokemon
-        //   })
-        // };
         agent.add(
           `${pokemon}. ${simpleResult
             .find(v => v.name == pokemon)
@@ -286,23 +213,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       });
 
       pokemonCompositeList.forEach(pokemon => {
-        // let find = compositeResult.find(
-        //   v =>
-        //     v.name == pokemon["pokemon-list"] &&
-        //     v.form == pokemon["pokemon-form-type-list"]
-        // );
-        // let name = `${pokemon["pokemon-form-type-list"]} 폼 ${
-        //   pokemon["pokemon-list"]
-        // }`;
-
-        // list[name] = {
-        //   title: name,
-        //   description: `${find.types.join(", ")}  타입의 포켓몬이다.`,
-        //   image: new Image({
-        //     url: find.image_url,
-        //     alt: name
-        //   })
-        // };
         agent.add(
           `${pokemon["pokemon-form-type-list"]} 폼 ${
             pokemon["pokemon-list"]
@@ -315,8 +225,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
             .types.join(", ")} 타입의 포켓몬이다.`
         );
       });
-
-      // agent.add(list);
 
       pokemonSimpleList.forEach(pokemon => {
         agent.add(new Suggestion(`${pokemon}의 카운터 포켓몬`));
@@ -333,6 +241,15 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       });
     }
 
+    function questionCatchChanceOfPokemonHandler(agent) {
+      const find = search(agent);
+
+      if (!find.pokemon) {
+        agent.add(`그런 이름의 포켓몬은 없는 듯 하다...`);
+        return;
+      }
+    }
+
     // Run the proper function handler based on the matched Dialogflow intent name
     let intentMap = new Map();
     intentMap.set("tell_nest", tellNestHandler);
@@ -340,9 +257,39 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
     intentMap.set("포켓몬의_카운터_묻기", questionCounterOfPokemonHandler);
     intentMap.set("타입의_포켓몬_묻기", questionPokemonOfTypeHandler);
     intentMap.set("포켓몬의_타입_묻기", questionTypeOfPokemonHandler);
+    intentMap.set("포켓몬의_포획률_묻기", questionCatchChanceOfPokemonHandler);
     agent.handleRequest(intentMap);
   }
 );
+
+function search(agent) {
+  const pokemonSimple = agent.parameters["pokemon-list"];
+  const pokemonComposite = agent.parameters["pokemon-composite-list"];
+  const find = pokedex.find(v => {
+    if (pokemonSimple) {
+      return v.name == pokemonSimple && v.form == "캐스퐁";
+    } else if (pokemonComposite) {
+      return (
+        v.name == pokemonComposite["pokemon-list"] &&
+        v.form == pokemonComposite["pokemon-form-type-list"]
+      );
+    }
+  });
+
+  return {
+    pokemon: find,
+    name:
+      pokemonSimple ||
+      `${pokemonComposite["pokemon-form-type-list"]} 폼 ${
+        pokemonComposite["pokemon-list"]
+      }`,
+    formattedName:
+      pokemonSimple ||
+      `${pokemonComposite["pokemon-list"]} (${
+        pokemonComposite["pokemon-form-type-list"]
+      }의 모습)`
+  };
+}
 
 function sort(pokemons) {
   return pokemons.sort((a, b) => {
@@ -374,16 +321,4 @@ function josa_ro(num) {
       return `${num}으로`;
   }
   return `${num}로`;
-}
-
-let cachedCounterMap = {};
-
-function getCounter(name, form) {
-  let pokemon = pokedex.find(v => v.name == name && v.form == form);
-
-  if (cachedCounterMap[[name, form].join(":")]) {
-    return cachedCounterMap[[name, form].join(":")];
-  }
-
-  pokedex.map(v => {});
 }
