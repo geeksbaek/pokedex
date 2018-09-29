@@ -13,7 +13,10 @@ const {
 } = require("dialogflow-fulfillment");
 
 process.env.DEBUG = "dialogflow:*"; // enables lib debugging statements
-const pokedex = JSON.parse(fs.readFileSync("data.json", "utf8"));
+const pokedex = JSON.parse(fs.readFileSync("data/pokemon.json", "utf8"));
+const mythical = JSON.parse(fs.readFileSync("data/mythical.json", "utf8"));
+const legendary = JSON.parse(fs.readFileSync("data/legendary.json", "utf8"));
+const regional = JSON.parse(fs.readFileSync("data/regional.json", "utf8"));
 
 exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
   (request, response) => {
@@ -22,6 +25,35 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       "Dialogflow Request headers: " + JSON.stringify(request.headers)
     );
     console.log("Dialogflow Request body: " + JSON.stringify(request.body));
+
+    function mainHandler(agent) {
+      let message = [];
+      message.push(`안녕하세요. 포켓몬 도감입니다.`);
+      message.push(`궁금하신 포켓몬의 이름이나 번호를 말씀해 주세요.`);
+      message.push(
+        `포켓몬 간의 상성이나, Pokemon GO 이벤트 정보도 물어볼 수 있습니다.`
+      );
+
+      agent.add(message.join("\n"));
+
+      agent.add(new Suggestion("피카츄 알아?"));
+      agent.add(new Suggestion("해피너스 상성 알려줘"));
+      agent.add(new Suggestion("143번 포켓몬이 뭐지?"));
+      agent.add(new Suggestion("지금 이벤트 뭐 해?"));
+    }
+
+    function fallbackHandler(agent) {
+      agent.add(`포켓몬 이름을 말씀해 주세요.`);
+
+      agent.add(
+        new Card({
+          title: `아니면 더 많은 정보를 원하시나요?`,
+          text: `Pokémon GO 공식 홈페이지에서 더 많은 정보를 얻을 수 있습니다.`,
+          buttonText: `Pokémon GO Support`,
+          buttonUrl: `https://support.pokemongo.nianticlabs.com/hc/ko`
+        })
+      );
+    }
 
     // 포켓몬 묻기
     function questionAboutPokemonHandler(agent) {
@@ -32,24 +64,10 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         return;
       }
 
-      let card = new Card({ title: find.formattedName });
-      if (find.pokemon.classify) {
-        card.setText(`${find.pokemon.classify}.  \n${find.pokemon.info}`);
-      } else {
-        card.setText(`${find.pokemon.info}`);
-      }
-      card.setImage(find.pokemon.image_url);
-
       let advice = [];
-      advice.push(
-        `${find.name}. ${find.pokemon.types.join(", ")} 타입 포켓몬.`
-      );
+      advice.push(`${find.name}. ${find.pokemon.types.join("·")} 타입 포켓몬.`);
 
-      let tier = ["S", "A", "B", "C", "D", "E", "F"][
-        find.pokemon.max_cp / 500 >= 6
-          ? 0
-          : 6 - parseInt(find.pokemon.max_cp / 500)
-      ];
+      let tier = calcCPTier(find.pokemon.max_cp);
 
       advice.push(`최대 CP ${find.pokemon.max_cp}의 ${tier}등급 포켓몬이다.`);
 
@@ -67,7 +85,38 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         advice.push(`포획 난이도는 아주 아주 어려운 편이다.`);
       }
 
+      let addedText = "";
+      if (mythical[find.pokemon.name]) {
+        addedText = `  \n  \n**${mythical[find.pokemon.name].note}**`;
+      } else if (legendary[find.pokemon.name]) {
+        addedText = `  \n  \n**${legendary[find.pokemon.name].note}**`;
+      } else if (regional[find.pokemon.name]) {
+        addedText = `  \n  \n**${regional[find.pokemon.name].note}**`;
+      }
+
       agent.add(advice.join("\n"));
+
+      let card = new Card({
+        title: find.formattedName
+      });
+
+      if (find.pokemon.image_url != "") {
+        card.setImage(find.pokemon.image_url);
+      }
+
+      card.setText(
+        `${find.pokemon.classify}.  \n${
+          find.pokemon.classify ? find.pokemon.info : ""
+        }${addedText}`
+      );
+
+      if (regional[find.pokemon.name]) {
+        card.setButton({
+          text: "출현 지역 확인하기",
+          url: regional[find.pokemon.name].image_url
+        });
+      }
+
       agent.add(card);
 
       agent.add(new Suggestion(`${find.name}의 카운터 포켓몬`));
@@ -82,7 +131,88 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       });
 
       agent.add(new Suggestion(`${find.pokemon.types.join(", ")} 타입 포켓몬`));
-      agent.add(new Suggestion(`알았어`));
+      if (mythical[find.pokemon.name]) {
+        agent.add(new Suggestion(`환상의 포켓몬`));
+      } else if (legendary[find.pokemon.name]) {
+        agent.add(new Suggestion(`전설의 포켓몬`));
+      } else if (regional[find.pokemon.name]) {
+        agent.add(new Suggestion(`지역 한정 포켓몬`));
+      }
+      agent.add(new Suggestion(`닫기`));
+    }
+
+    function questionMythical(agent) {
+      agent.add(
+        `환상의 포켓몬.\n특별한 리서치를 통해서만 만날 수 있는 포켓몬이다.`
+      );
+
+      let pokemons = Object.keys(mythical)
+        .map(v => `**${v}**`)
+        .join(", ");
+
+      agent.add(
+        new Card({
+          title: `환상의 포켓몬`,
+          imageUrl: shuffle([
+            `https://i.imgur.com/OJoEy6k.png`,
+            `https://i.imgur.com/6cAT9bu.jpg`
+          ])[0],
+          text: `현재까지 알려진 환상의 포켓몬은 ${pokemons}가 있다.`
+        })
+      );
+
+      Object.keys(mythical).forEach(pokemon => {
+        agent.add(new Suggestion(pokemon));
+      });
+      agent.add(new Suggestion(`닫기`));
+    }
+
+    function questionLegendary(agent) {
+      agent.add(
+        `전설의 포켓몬.\n특별한 리서치나 전설 레이드배틀을 통해서만 만날 수 있는 포켓몬이다.`
+      );
+
+      let pokemons = Object.keys(legendary)
+        .map(v => `**${v}**`)
+        .join(", ");
+
+      agent.add(
+        new Card({
+          title: `전설의 포켓몬`,
+          imageUrl: shuffle([
+            `https://i.imgur.com/vMtg5PK.jpg`,
+            `https://i.imgur.com/XzY6XDB.jpg`,
+            `https://i.imgur.com/pBMUF8B.jpg`
+          ])[0],
+          text: `현재까지 알려진 전설의 포켓몬은 ${pokemons}가 있다.`
+        })
+      );
+
+      Object.keys(legendary).forEach(pokemon => {
+        agent.add(new Suggestion(pokemon));
+      });
+      agent.add(new Suggestion(`닫기`));
+    }
+
+    function questionRegional(agent) {
+      agent.add(`지역 한정 포켓몬.\n일부 지역에서만 만날 수 있는 포켓몬이다.`);
+
+      let pokemons = Object.keys(regional)
+        .map(v => `**${v}**`)
+        .join(", ");
+
+      agent.add(
+        new Card({
+          title: `지역 한정 포켓몬`,
+          imageUrl: `https://i.imgur.com/Z2JGnBj.jpg`,
+          text: `지역 한정 포켓몬은 ${pokemons}가 있다.`
+        })
+      );
+
+      Object.keys(regional).forEach(pokemon => {
+        agent.add(new Suggestion(pokemon));
+      });
+      agent.add(new Suggestion(`닫기`));
     }
 
     // 둥지 묻기
@@ -101,33 +231,38 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
 
       agent.add(
         `${Josa.r(find.name, "은/는")} ${find.pokemon.types.join(
-          ", "
+          "·"
         )} 타입 포켓몬이며, ${find.pokemon.weaknesses_types.join(
-          ", "
+          "·"
         )} 타입 공격에 특히 취약하다.`
       );
 
       let advice = [];
       let weaknessesName = [];
 
-      result.filter((v, i) => i < 3).forEach(v => {
+      result.filter((v, i) => i < 5).forEach(v => {
         let name = v.form == "캐스퐁" ? v.name : `${v.form} 폼 ${v.name}`;
+        let tier = calcCPTier(
+          pokedex.find(vv => vv.name == v.name && vv.form == v.form).max_cp
+        );
+
         advice.push(
           `${v.quick_skill}·${Josa.r(
             v.charge_skill,
             "을/를"
-          )} 사용하는 **${name}**`
+          )} 사용하는 **${name}** (${tier}등급)`
         );
         weaknessesName.push(name);
       });
 
-      agent.add(
-        new Card({
-          title: find.formattedName,
-          imageUrl: find.pokemon.image_url,
-          text: `${find.name}의 카운터 포켓몬은 ${advice.join(", ")} 등이 있다.`
-        })
-      );
+      let card = new Card({
+        title: find.formattedName,
+        text: `${find.name}의 카운터 포켓몬은 ${advice.join(", ")} 등이 있다.`
+      });
+      if (find.pokemon.image_url != "") {
+        card.setImage(find.pokemon.image_url);
+      }
+      agent.add(card);
 
       weaknessesName.forEach(name => {
         agent.add(new Suggestion(`${name}`));
@@ -138,7 +273,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
           `${find.pokemon.weaknesses_types.join(", ")} 타입 포켓몬`
         )
       );
-      agent.add(new Suggestion(`알았어`));
+      agent.add(new Suggestion(`닫기`));
     }
 
     // 타입의 포켓몬 묻기
@@ -160,7 +295,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       );
 
       if (selected.length == 0) {
-        agent.add(`${types.join(", ")} 타입을 가지는 포켓몬은 없는 듯 하다...`);
+        agent.add(`${types.join("·")} 타입을 가지는 포켓몬은 없는 듯 하다...`);
         types.forEach(v => {
           agent.add(new Suggestion(`${v} 타입 포켓몬`));
         });
@@ -169,7 +304,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       selected = sort(selected);
 
       agent.add(
-        `${types.join(", ")} 타입을 가지는 포켓몬은 ${selected
+        `${types.join("·")} 타입을 가지는 포켓몬은 ${selected
           .filter((v, i) => i < 5)
           .map(v => (v.form == "캐스퐁" ? v.name : `${v.form} 폼 ${v.name}`))
           .join(", ")} 등 ${selected.length}마리의 포켓몬이 있다.`
@@ -180,7 +315,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
           new Suggestion(v.form == "캐스퐁" ? v.name : `${v.form} 폼 ${v.name}`)
         );
       });
-      agent.add(new Suggestion(`알았어`));
+      agent.add(new Suggestion(`닫기`));
     }
 
     // 포켓몬의 타입 묻기
@@ -253,11 +388,16 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
     // Run the proper function handler based on the matched Dialogflow intent name
     let intentMap = new Map();
     intentMap.set("tell_nest", tellNestHandler);
+    intentMap.set("Default Welcome Intent", mainHandler);
+    intentMap.set("Default Fallback Intent", fallbackHandler);
     intentMap.set("포켓몬_묻기", questionAboutPokemonHandler);
     intentMap.set("포켓몬의_카운터_묻기", questionCounterOfPokemonHandler);
     intentMap.set("타입의_포켓몬_묻기", questionPokemonOfTypeHandler);
     intentMap.set("포켓몬의_타입_묻기", questionTypeOfPokemonHandler);
     intentMap.set("포켓몬의_포획률_묻기", questionCatchChanceOfPokemonHandler);
+    intentMap.set("환상의_포켓몬_묻기", questionMythical);
+    intentMap.set("전설의_포켓몬_묻기", questionLegendary);
+    intentMap.set("지역_한정_포켓몬_묻기", questionRegional);
     agent.handleRequest(intentMap);
   }
 );
@@ -296,7 +436,7 @@ function sort(pokemons) {
     let pokemonA = pokedex.find(v => v.name == a.name);
     let pokemonB = pokedex.find(v => v.name == b.name);
     if (b.percentage != undefined && a.percentage != undefined) {
-      return b.percentage * pokemonB.max_cp - a.percentage * pokemonA.max_cp;
+      return b.percentage - a.percentage;
     }
     return pokemonB.max_cp - pokemonA.max_cp;
   });
@@ -313,6 +453,12 @@ function removeDups(pokemons) {
   return ret;
 }
 
+function calcCPTier(cp) {
+  return ["S", "A", "B", "C", "D", "E", "F"][
+    cp / 500 >= 6 ? 0 : 6 - parseInt(cp / 500)
+  ];
+}
+
 function josa_ro(num) {
   switch (num % 10) {
     case 3:
@@ -321,4 +467,12 @@ function josa_ro(num) {
       return `${num}으로`;
   }
   return `${num}로`;
+}
+
+function shuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
 }

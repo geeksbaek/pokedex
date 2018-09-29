@@ -90,6 +90,14 @@ func main() {
 			return err
 		}
 
+		// if doc.Find(`h1.p-legendary`).Length() > 0 {
+		// 	fmt.Printf("전설의 포켓몬: %v\n", path)
+		// }
+
+		// if doc.Find(`h1.p-mythical`).Length() > 0 {
+		// 	fmt.Printf("환상의 포켓몬: %v\n", path)
+		// }
+
 		quickSkillList := []*Skill{}
 		doc.Find(`article.all-moves table.moves:first-child tbody tr:not(.old):not(.event)`).Each(func(i int, s *goquery.Selection) {
 			t := typeMap[s.Find(`td:first-child span`).AttrOr(`data-type`, ``)]
@@ -172,7 +180,7 @@ func main() {
 		return true
 	})
 
-	f, err := os.Create("../functions/data.json")
+	f, err := os.Create("../functions/data/pokemon.json")
 	if err != nil {
 		panic(err)
 	}
@@ -231,8 +239,12 @@ func trimName(s string) string {
 }
 
 func getImageURL(doc *goquery.Document) string {
-	if doc.Find(`article.forms-block div.forms a.form`).Length() >= 2 {
+	switch {
+	case doc.Find(`article.forms-block div.forms a.form`).Length() >= 2:
 		return `https://pokemon.gameinfo.io` + doc.Find(`article.forms-block div.forms a.form.active img`).AttrOr(`src`, ``)
+	case doc.Find(`article.forms-block div.forms a.form`).Length() == 1:
+		return `https://pokemon.gameinfo.io` + doc.Find(`article.images-block img`).First().AttrOr(`src`, ``)
+	default:
+		return ""
 	}
-	return `https://pokemon.gameinfo.io` + doc.Find(`article.images-block img`).First().AttrOr(`src`, ``)
 }
