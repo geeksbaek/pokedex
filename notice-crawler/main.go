@@ -77,7 +77,7 @@ func fetchPost() {
 		return
 	}
 
-	f, err := os.Open(outputPath)
+	f, err := os.OpenFile(outputPath, os.O_RDWR|os.O_APPEND, 0660)
 	if err != nil {
 		log.Println(err)
 		return
