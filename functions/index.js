@@ -3,6 +3,7 @@
 "use strict";
 
 const functions = require("firebase-functions");
+const fetch = require("node-fetch");
 const Josa = require("josa-js");
 const fs = require("fs");
 const {
@@ -376,13 +377,24 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       });
     }
 
-    function questionCatchChanceOfPokemonHandler(agent) {
-      const find = search(agent);
-
-      if (!find.pokemon) {
-        agent.add(`그런 이름의 포켓몬은 없는 듯 하다...`);
-        return;
-      }
+    function questionEvent(agent) {
+      fetch(`http://104.196.148.238/posts`).then(response => {
+        let contentType = response.headers.get("content-type");
+        if (contentType && contentType.indexOf("application/json") !== -1) {
+          return response.json().then(json => {
+            agent.add(`한 개의 이벤트가 열리고 있습니다.`);
+            agent.add(
+              new Card({
+                title: Object.keys(json)[0].title,
+                buttonText: "이벤트 자세히 보기",
+                buttonUrl: Object.keys(json)[0].url
+              })
+            );
+          });
+        } else {
+          console.log("Oops, we haven't got JSON!");
+        }
+      });
     }
 
     // Run the proper function handler based on the matched Dialogflow intent name
@@ -394,10 +406,10 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
     intentMap.set("포켓몬의_카운터_묻기", questionCounterOfPokemonHandler);
     intentMap.set("타입의_포켓몬_묻기", questionPokemonOfTypeHandler);
     intentMap.set("포켓몬의_타입_묻기", questionTypeOfPokemonHandler);
-    intentMap.set("포켓몬의_포획률_묻기", questionCatchChanceOfPokemonHandler);
     intentMap.set("환상의_포켓몬_묻기", questionMythical);
     intentMap.set("전설의_포켓몬_묻기", questionLegendary);
     intentMap.set("지역_한정_포켓몬_묻기", questionRegional);
+    intentMap.set("이벤트_묻기", questionEvent);
     agent.handleRequest(intentMap);
   }
 );
