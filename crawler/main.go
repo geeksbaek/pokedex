@@ -45,18 +45,18 @@ type Pokemon struct {
 	Evolution       []string `json:"evolution"`        // 진화
 	WeaknessesTypes []string `json:"weaknesses_types"` // 취약한 타입
 
-	QuickSkillList  []*Skill   // 빠른 공격 목록
-	ChargeSkillList []*Skill   // 주요 공격 목록
+	QuickSkillList  []*Skill   `json:"quick"`    // 빠른 공격 목록
+	ChargeSkillList []*Skill   `json:"charge"`   // 주요 공격 목록
 	Counters        []*Counter `json:"counters"` // 카운터 포켓몬
 }
 
 // Skill 구조체는 스킬 정보를 구성합니다.
 type Skill struct {
-	Name  string  // 스킬 이름
-	Type  string  // 스킬 속성
-	DPS   float64 // 스킬 초당 공격력
-	Stab  bool    // 자속 여부
-	Event bool    // 이벤트 스킬 여부
+	Name  string  `json:"name"`  // 스킬 이름
+	Type  string  `json:"type"`  // 스킬 속성
+	DPS   float64 `json:"dps"`   // 스킬 초당 공격력
+	Stab  bool    `json:"stab"`  // 자속 여부
+	Event bool    `json:"event"` // 이벤트 스킬 여부
 }
 
 // Counter 구조체는 카운터 정보를 구성합니다.
@@ -91,23 +91,23 @@ func main() {
 		}
 
 		quickSkillList := []*Skill{}
-		doc.Find(`article.all-moves table.moves:first-child tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
-			t := s.Find(`td:first-child span`).AttrOr(`data-type`, ``)
-			name := strings.TrimSpace(s.Find(`td:first-child a`).Text())
+		doc.Find(`article.all-moves table.moves:first-child tbody tr:not(.old):not(.event)`).Each(func(i int, s *goquery.Selection) {
+			t := typeMap[s.Find(`td:first-child span`).AttrOr(`data-type`, ``)]
+			name := strings.TrimSpace(strings.TrimRight(strings.TrimSpace(s.Find(`td:first-child a`).Text()), "(event)"))
 			dps := sToFloat(s.Find(`td:last-child`).Text())
 			isStab := s.HasClass(`stab`)
 			isEvent := s.HasClass(`event`)
-			quickSkillList = append(quickSkillList, &Skill{t, name, dps, isStab, isEvent})
+			quickSkillList = append(quickSkillList, &Skill{name, t, dps, isStab, isEvent})
 		})
 
 		chargeSkillList := []*Skill{}
-		doc.Find(`article.all-moves table.moves:last-child tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
-			t := s.Find(`td:first-child span`).AttrOr(`data-type`, ``)
-			name := strings.TrimSpace(s.Find(`td:first-child a`).Text())
+		doc.Find(`article.all-moves table.moves:nth-child(2) tbody tr:not(.old):not(.event)`).Each(func(i int, s *goquery.Selection) {
+			t := typeMap[s.Find(`td:first-child span`).AttrOr(`data-type`, ``)]
+			name := strings.TrimSpace(strings.TrimRight(strings.TrimSpace(s.Find(`td:first-child a`).Text()), "(event)"))
 			dps := sToFloat(s.Find(`td:last-child`).Text())
 			isStab := s.HasClass(`stab`)
 			isEvent := s.HasClass(`event`)
-			chargeSkillList = append(chargeSkillList, &Skill{t, name, dps, isStab, isEvent})
+			chargeSkillList = append(chargeSkillList, &Skill{name, t, dps, isStab, isEvent})
 		})
 
 		counters := []*Counter{}
