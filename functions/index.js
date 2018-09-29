@@ -416,6 +416,8 @@ function search(agent) {
     }
   });
 
+  const formattedNumber = find.number.toString().padStart(3, "0");
+
   return {
     pokemon: find,
     name:
@@ -423,11 +425,11 @@ function search(agent) {
       `${pokemonComposite["pokemon-form-type-list"]} 폼 ${
         pokemonComposite["pokemon-list"]
       }`,
-    formattedName:
-      pokemonSimple ||
-      `${pokemonComposite["pokemon-list"]} (${
-        pokemonComposite["pokemon-form-type-list"]
-      }의 모습)`
+    formattedName: pokemonSimple
+      ? `${pokemonSimple}  #${formattedNumber}`
+      : `${pokemonComposite["pokemon-list"]} #${formattedNumber} (${
+          pokemonComposite["pokemon-form-type-list"]
+        }의 모습)`
   };
 }
 
