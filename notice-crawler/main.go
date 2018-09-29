@@ -1,15 +1,24 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
+	"os"
 	"strings"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/jasonlvhit/gocron"
+	"github.com/julienschmidt/httprouter"
 )
 
-const postPageURL = `https://pokemongolive.com/ko/post/`
-const dateForm = `2006년 1월 2일`
+const (
+	postPageURL = `https://pokemongolive.com/ko/post/`
+	dateForm    = `2006년 1월 2일`
+	outputPath  = `./posts.json`
+)
 
 type Post struct {
 	Date  time.Time `json:"date"`
@@ -18,9 +27,34 @@ type Post struct {
 }
 
 func main() {
+	fetchPost()
+
+	gocron.Every(1).Hour().Do(fetchPost)
+	<-gocron.Start()
+
+	router := httprouter.New()
+	router.GET("/posts", posts)
+
+	log.Fatal(http.ListenAndServe(":80", router))
+}
+
+func posts(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	f, err := os.Open(outputPath)
+	if err != nil {
+		log.Println(err)
+		fmt.Fprintf(w, err.Error())
+		return
+	}
+	if err := json.NewDecoder(f).Decode(w); err != nil {
+		log.Println(err)
+	}
+}
+
+func fetchPost() {
 	doc, err := goquery.NewDocument(postPageURL)
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		return
 	}
 
 	posts := []*Post{}
@@ -38,7 +72,21 @@ func main() {
 		})
 	})
 
-	for _, v := range posts {
-		fmt.Println(v)
+	if len(posts) == 0 {
+		log.Println("empty posts")
+		return
 	}
+
+	f, err := os.Open(outputPath)
+	if err != nil {
+		log.Println(err)
+		return
+	}
+
+	if err := json.NewEncoder(f).Encode(posts); err != nil {
+		log.Println(err)
+		return
+	}
+
+	log.Println("Write Succeed")
 }
