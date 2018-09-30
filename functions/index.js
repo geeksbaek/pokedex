@@ -377,24 +377,32 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       });
     }
 
-    function questionEvent(agent) {
-      fetch(`http://104.196.148.238/posts`).then(response => {
-        let contentType = response.headers.get("content-type");
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-          return response.json().then(json => {
-            agent.add(`한 개의 이벤트가 열리고 있습니다.`);
-            agent.add(
-              new Card({
-                title: Object.keys(json)[0].title,
-                buttonText: "이벤트 자세히 보기",
-                buttonUrl: Object.keys(json)[0].url
-              })
-            );
-          });
-        } else {
-          console.log("Oops, we haven't got JSON!");
-        }
-      });
+    async function questionEvent(agent) {
+      let response = await fetch("http://104.196.148.238/posts");
+      let data = await response.json();
+
+      agent.add(`3개의 이벤트가 열리고 있습니다.`);
+      agent.add(
+        new Card({
+          title: data[0].title,
+          buttonText: "이벤트 자세히 보기",
+          buttonUrl: data[0].url
+        })
+      );
+      agent.add(
+        new Card({
+          title: data[1].title,
+          buttonText: "이벤트 자세히 보기",
+          buttonUrl: data[1].url
+        })
+      );
+      agent.add(
+        new Card({
+          title: data[2].title,
+          buttonText: "이벤트 자세히 보기",
+          buttonUrl: data[2].url
+        })
+      );
     }
 
     // Run the proper function handler based on the matched Dialogflow intent name
@@ -428,7 +436,9 @@ function search(agent) {
     }
   });
 
-  const formattedNumber = find.number.toString().padStart(3, "0");
+  const formattedNumber = find
+    ? find.number.toString().padStart(3, "0")
+    : "???";
 
   return {
     pokemon: find,
