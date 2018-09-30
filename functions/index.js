@@ -229,7 +229,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
           title: `전설의 포켓몬`,
           imageUrl: shuffle([
             `https://i.imgur.com/vMtg5PK.jpg`,
-            `https://i.imgur.com/XzY6XDB.jpg`,
+            `https://i.imgur.com/1kMH95e.jpg`,
             `https://i.imgur.com/pBMUF8B.jpg`
           ])[0],
           text: `현재까지 알려진 전설의 포켓몬은 ${pokemons}가 있다.`
@@ -302,7 +302,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         title: `${find.name}에게 큰 피해를 주는 포켓몬`,
         text: `${advice.length > 0 ? advice.join("  \n  \n") : "???"}`
       });
-      // if (find.pokemon.image_url != "") {
+      // if (find.pokemon.image_url) {
       //   card.setImage(find.pokemon.image_url);
       // }
       agent.add(card);
