@@ -1,0 +1,52 @@
+[
+  {
+    "value": "S",
+    "synonyms": [
+      "S",
+      "에스"
+    ]
+  },
+  {
+    "value": "A",
+    "synonyms": [
+      "A",
+      "에이"
+    ]
+  },
+  {
+    "value": "B",
+    "synonyms": [
+      "B",
+      "비"
+    ]
+  },
+  {
+    "value": "C",
+    "synonyms": [
+      "C",
+      "씨",
+      "시"
+    ]
+  },
+  {
+    "value": "D",
+    "synonyms": [
+      "D",
+      "디"
+    ]
+  },
+  {
+    "value": "E",
+    "synonyms": [
+      "E",
+      "이"
+    ]
+  },
+  {
+    "value": "F",
+    "synonyms": [
+      "F",
+      "에프"
+    ]
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "id": "a2dd57bf-b688-47ff-8658-02e42084ae39",
+  "name": "메가_진화_Fallback",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "f4560acd-8fd8-4a1a-983e-67fd8f25b34a",
+          "required": false,
+          "dataType": "@mega-evolution",
+          "name": "mega-evolution",
+          "value": "$mega-evolution",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "ko",
+          "speech": "아직 메가 진화를 할 수 있는 포켓몬은 없는 듯 하다..."
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": false,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": []
+}

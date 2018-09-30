@@ -1,0 +1,145 @@
+[
+  {
+    "id": "a03f4b82-20e0-48b5-90a2-3a7b3e11ffa2",
+    "data": [
+      {
+        "text": "S",
+        "alias": "pokemon-tier-list",
+        "meta": "@pokemon-tier-list",
+        "userDefined": false
+      },
+      {
+        "text": "급",
+        "alias": "question-tier",
+        "meta": "@question-tier",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "6c2a29fc-63a2-4198-850d-5ba587d66ed0",
+    "data": [
+      {
+        "text": "S",
+        "alias": "pokemon-tier-list",
+        "meta": "@pokemon-tier-list",
+        "userDefined": false
+      },
+      {
+        "text": "등급",
+        "alias": "question-tier",
+        "meta": "@question-tier",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "227a3cdf-cc06-49ec-9a52-f5915a0bad59",
+    "data": [
+      {
+        "text": "S",
+        "alias": "pokemon-tier-list",
+        "meta": "@pokemon-tier-list",
+        "userDefined": false
+      },
+      {
+        "text": "급",
+        "alias": "question-tier",
+        "meta": "@question-tier",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬 ",
+        "userDefined": false
+      },
+      {
+        "text": "물",
+        "meta": "@sys.ignore",
+        "userDefined": false
+      },
+      {
+        "text": "어봐",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "19f1c51b-1886-4918-8a2f-bcf7d34b2e40",
+    "data": [
+      {
+        "text": "S",
+        "alias": "pokemon-tier-list",
+        "meta": "@pokemon-tier-list",
+        "userDefined": false
+      },
+      {
+        "text": "급",
+        "alias": "question-tier",
+        "meta": "@question-tier",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬 알려줘",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "021c0a36-ae52-45d8-a80f-309df52633e0",
+    "data": [
+      {
+        "text": "S",
+        "alias": "pokemon-tier-list",
+        "meta": "@pokemon-tier-list",
+        "userDefined": false
+      },
+      {
+        "text": "급",
+        "alias": "question-tier",
+        "meta": "@question-tier",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬 뭐있어",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  },
+  {
+    "id": "9a7ffd6c-5b4d-40c4-be09-86713491e8c2",
+    "data": [
+      {
+        "text": "S",
+        "alias": "pokemon-tier-list",
+        "meta": "@pokemon-tier-list",
+        "userDefined": false
+      },
+      {
+        "text": "급",
+        "alias": "question-tier",
+        "meta": "@question-tier",
+        "userDefined": false
+      },
+      {
+        "text": " 포켓몬",
+        "userDefined": false
+      }
+    ],
+    "isTemplate": false,
+    "count": 0
+  }
+]

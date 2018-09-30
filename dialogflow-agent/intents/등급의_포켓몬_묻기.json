@@ -1,0 +1,49 @@
+{
+  "id": "cf000479-b38d-459c-983d-f7d9723c560c",
+  "name": "등급의_포켓몬_묻기",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "8d67a4e1-031a-4ab9-9f4f-102797160e99",
+          "required": true,
+          "dataType": "@pokemon-tier-list",
+          "name": "pokemon-tier-list",
+          "value": "$pokemon-tier-list",
+          "prompts": [
+            {
+              "lang": "ko",
+              "value": "무슨 등급의 포켓몬을 찾을까요?"
+            }
+          ],
+          "isList": false
+        },
+        {
+          "id": "dcb57b73-a727-4e86-a7aa-24ef76decf8f",
+          "dataType": "@question-tier",
+          "name": "question-tier",
+          "value": "$question-tier",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "ko",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": []
+}

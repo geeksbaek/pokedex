@@ -1,0 +1,44 @@
+{
+  "id": "b65b35ea-6506-4e77-a2a7-1ca41d42df58",
+  "name": "이벤트_묻기",
+  "auto": true,
+  "contexts": [],
+  "responses": [
+    {
+      "resetContexts": false,
+      "affectedContexts": [],
+      "parameters": [
+        {
+          "id": "09aaedfb-0d70-4ce8-9258-7b63403808ca",
+          "required": false,
+          "dataType": "@sys.date-time",
+          "name": "date-time",
+          "value": "$date-time",
+          "isList": false
+        },
+        {
+          "id": "71525b2d-f237-409c-9936-bbd0e43c8d1a",
+          "required": false,
+          "dataType": "@question-event",
+          "name": "question-event",
+          "value": "$question-event",
+          "isList": false
+        }
+      ],
+      "messages": [
+        {
+          "type": 0,
+          "lang": "ko",
+          "speech": []
+        }
+      ],
+      "defaultResponsePlatforms": {},
+      "speech": []
+    }
+  ],
+  "priority": 500000,
+  "webhookUsed": true,
+  "webhookForSlotFilling": false,
+  "fallbackIntent": false,
+  "events": []
+}
