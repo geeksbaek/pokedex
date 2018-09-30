@@ -302,9 +302,9 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         title: `${find.name}에게 큰 피해를 주는 포켓몬`,
         text: `${advice.length > 0 ? advice.join("  \n  \n") : "???"}`
       });
-      if (find.pokemon.image_url != "") {
-        card.setImage(find.pokemon.image_url);
-      }
+      // if (find.pokemon.image_url != "") {
+      //   card.setImage(find.pokemon.image_url);
+      // }
       agent.add(card);
 
       weaknessesName.forEach(name => {
