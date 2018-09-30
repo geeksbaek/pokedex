@@ -228,7 +228,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
         new Card({
           title: `전설의 포켓몬`,
           imageUrl: shuffle([
-            `https://i.imgur.com/vMtg5PK.jpg`,
+            `https://i.imgur.com/g6sreeA.jpg`,
             `https://i.imgur.com/1kMH95e.jpg`,
             `https://i.imgur.com/pBMUF8B.jpg`
           ])[0],
