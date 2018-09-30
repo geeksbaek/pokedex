@@ -361,6 +361,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
       agent.add(new Suggestion(`닫기`));
     }
 
+    // TODO.
+    // 복수의 타입을 묻지 못하도록 변경해야 함
     // 포켓몬의 타입 묻기
     function questionTypeOfPokemonHandler(agent) {
       const pokemonSimpleList = agent.parameters["pokemon-list"];
@@ -388,6 +390,7 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
             .find(v => v.name == pokemon)
             .types.join(", ")} 타입의 포켓몬이다.`
         );
+        agent.add(new Suggestion(`${pokemon}의 카운터 포켓몬`));
       });
 
       pokemonCompositeList.forEach(pokemon => {
@@ -402,13 +405,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
             )
             .types.join(", ")} 타입의 포켓몬이다.`
         );
-      });
-
-      pokemonSimpleList.forEach(pokemon => {
-        agent.add(new Suggestion(`${pokemon}의 카운터 포켓몬`));
-      });
-
-      pokemonCompositeList.forEach(pokemon => {
         agent.add(
           new Suggestion(
             `${pokemon["pokemon-form-type-list"]} 폼 ${
