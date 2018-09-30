@@ -1,0 +1,24 @@
+[
+  {
+    "name": "멜탄",
+    "number": 891,
+    "form": "캐스퐁",
+    "classify": "너트포켓몬",
+    "info": "몸 대부분이 액체 금속으로 이루어져 있어 형태가 매우 유동적이며, 액상화한 손발을 사용하여 금속을 침식해서 체내에 흡수할 수 있다. 외부에서 흡수한 금속을 원료로 전기 에너지를 만들어 내는데, 생체 활동의 원천이 될 뿐만 아니라 눈에서 발사해서 공격하는 일도 있다고 한다. 호기심이 매우 왕성해서 온갖 것에 흥미를 보이는데, 매우 천진난만하며 다양한 표정을 보여준다.",
+    "types": ["강철"],
+    "atk": 0,
+    "def": 0,
+    "hp": 0,
+    "url": "https://pokemongolive.com/ko/post/meltan-announcement/",
+    "max_cp": 0,
+    "base_capture_rate": 0,
+    "base_flee_rate": 0,
+    "buddy_walk_distance": 0,
+    "image_url": "https://pokemon.gameinfo.io/images/pokemon-go/891-00.png",
+    "evolution": [],
+    "weaknesses_types": ["불꽃", "땅", "격투"],
+    "quick": [],
+    "charge": [],
+    "counters": []
+  }
+]

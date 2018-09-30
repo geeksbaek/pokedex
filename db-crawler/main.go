@@ -26,8 +26,10 @@ type Pokemon struct {
 	DEF      int      `json:"def"`      // 방어
 	HP       int      `json:"hp"`       // 체력
 
-	CPRank int `json:"cp_rank"` // CP 순위
-	MaxCP  int `json:"max_cp"`  // 최대 CP
+	URL string `json:"url"` // 관련 링크
+
+	// CPRank int `json:"cp_rank"` // CP 순위
+	MaxCP int `json:"max_cp"` // 최대 CP
 	// MaxCPInResearchEncounters                int // 리서치 보상에서 최대 CP
 	// MaxCPInMaxHatchedOrRaids                 int // 부화 및 레이드에서 최대 CP
 	// MaxCPInMaxHatchedOrRaidsWithWeatherBoost int // 부화 및 레이드(날씨 부스트)에서 최대 CP
@@ -61,11 +63,11 @@ type Skill struct {
 
 // Counter 구조체는 카운터 정보를 구성합니다.
 type Counter struct {
-	Name        string  `json:"name"`         // 카운터 포켓몬 이름
-	Form        string  `json:"form"`         // 카운터 포켓몬 폼
-	QuickSkill  string  `json:"quick_skill"`  // 카운터 빠른 공격
-	ChargeSkill string  `json:"charge_skill"` // 카운터 주요 공격
-	Percentage  float64 `json:"percentage"`   // 유효 데미지
+	Name        string  `json:"name"`       // 카운터 포켓몬 이름
+	Form        string  `json:"form"`       // 카운터 포켓몬 폼
+	QuickSkill  string  `json:"quick"`      // 카운터 빠른 공격
+	ChargeSkill string  `json:"charge"`     // 카운터 주요 공격
+	Percentage  float64 `json:"percentage"` // 유효 데미지
 }
 
 var (
@@ -99,7 +101,7 @@ func main() {
 		// }
 
 		quickSkillList := []*Skill{}
-		doc.Find(`article.all-moves table.moves:first-child tbody tr:not(.old):not(.event)`).Each(func(i int, s *goquery.Selection) {
+		doc.Find(`article.all-moves table.moves:first-child tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
 			t := typeMap[s.Find(`td:first-child span`).AttrOr(`data-type`, ``)]
 			name := strings.TrimSpace(strings.TrimRight(strings.TrimSpace(s.Find(`td:first-child a`).Text()), "(event)"))
 			dps := sToFloat(s.Find(`td:last-child`).Text())
@@ -109,7 +111,7 @@ func main() {
 		})
 
 		chargeSkillList := []*Skill{}
-		doc.Find(`article.all-moves table.moves:nth-child(2) tbody tr:not(.old):not(.event)`).Each(func(i int, s *goquery.Selection) {
+		doc.Find(`article.all-moves table.moves:nth-child(2) tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
 			t := typeMap[s.Find(`td:first-child span`).AttrOr(`data-type`, ``)]
 			name := strings.TrimSpace(strings.TrimRight(strings.TrimSpace(s.Find(`td:first-child a`).Text()), "(event)"))
 			dps := sToFloat(s.Find(`td:last-child`).Text())
@@ -145,16 +147,16 @@ func main() {
 		})
 
 		pokemonList = append(pokemonList, &Pokemon{
-			Name:              strings.TrimSpace(doc.Find(`h1.mobile-hidden`).Contents().Not("#forms").Text()),
-			Number:            stoInt(numberRe.FindStringSubmatch(string(b))),
-			Form:              getForm(doc.Find(`title`).Text()),
-			Classify:          classifyMap[strings.TrimSpace(doc.Find(`h1.mobile-hidden`).ReplaceWith("#forms").Text())],
-			Info:              strings.Trim(strings.TrimSpace(doc.Find(`p.description`).Text()), `"`),
-			Types:             splitTypes(doc.Find(`div.large-type div`)),
-			ATK:               toInt(doc.Find(`.table-stats:first-child tr:nth-child(1) td:nth-child(2)`).Text()),
-			DEF:               toInt(doc.Find(`.table-stats:first-child tr:nth-child(2) td:nth-child(2)`).Text()),
-			HP:                toInt(doc.Find(`.table-stats:first-child tr:nth-child(3) td:nth-child(2)`).Text()),
-			CPRank:            toInt(doc.Find(`#cont > div > span > em`).Text()),
+			Name:     strings.TrimSpace(doc.Find(`h1.mobile-hidden`).Contents().Not("#forms").Text()),
+			Number:   stoInt(numberRe.FindStringSubmatch(string(b))),
+			Form:     getForm(doc.Find(`title`).Text()),
+			Classify: classifyMap[strings.TrimSpace(doc.Find(`h1.mobile-hidden`).ReplaceWith("#forms").Text())],
+			Info:     strings.Trim(strings.TrimSpace(doc.Find(`p.description`).Text()), `"`),
+			Types:    splitTypes(doc.Find(`div.large-type div`)),
+			ATK:      toInt(doc.Find(`.table-stats:first-child tr:nth-child(1) td:nth-child(2)`).Text()),
+			DEF:      toInt(doc.Find(`.table-stats:first-child tr:nth-child(2) td:nth-child(2)`).Text()),
+			HP:       toInt(doc.Find(`.table-stats:first-child tr:nth-child(3) td:nth-child(2)`).Text()),
+			// CPRank:            toInt(doc.Find(`#cont > div > span > em`).Text()),
 			MaxCP:             toInt(doc.Find(`article.pokemon-stats table.table-stats:nth-child(3) tr:last-child td:nth-child(2)`).Contents().Not(`a`).Text()),
 			BaseCaptureRate:   perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(1) td:last-child`).Text()),
 			BaseFleeRate:      perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(2) td:last-child`).Text()),
@@ -242,7 +244,7 @@ func getImageURL(doc *goquery.Document) string {
 	switch {
 	case doc.Find(`article.forms-block div.forms a.form`).Length() >= 2:
 		return `https://pokemon.gameinfo.io` + doc.Find(`article.forms-block div.forms a.form.active img`).AttrOr(`src`, ``)
-	case doc.Find(`article.forms-block div.forms a.form`).Length() == 1:
+	case doc.Find(`article.images-block img`).Length() > 0:
 		return `https://pokemon.gameinfo.io` + doc.Find(`article.images-block img`).First().AttrOr(`src`, ``)
 	default:
 		return ""
