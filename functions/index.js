@@ -36,6 +36,20 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
 
       agent.add(message.join("\n"));
 
+      agent.add(
+        new Card({
+          title: `아직 포켓몬 트레이너가 아니신가요?`,
+          imageUrl: "https://i.imgur.com/psJq1KD.jpg",
+          text: [
+            `Pokémon GO는 당신이 사는 세계 모두가 무대입니다.`,
+            `평상시 생활에서 포켓몬을 잡거나 배틀하거나 포켓몬 트레이너로서의 일상이 시작됩니다!`,
+            `이 게임은 모니터 안에서 끝나지 않습니다. 여러분은 포켓몬 트레이너로서 집 밖으로 나와 포켓몬을 찾으면서 즐길 수 있습니다.`
+          ].join(`  \n`),
+          buttonText: `Google Play Store에서 다운로드`,
+          buttonUrl: `https://play.google.com/store/apps/details?id=com.nianticlabs.pokemongo`
+        })
+      );
+
       agent.add(new Suggestion("피카츄 알아?"));
       agent.add(new Suggestion("해피너스 상성 알려줘"));
       agent.add(new Suggestion("143번 포켓몬이 뭐지?"));
