@@ -109,8 +109,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
               (b.stab ? b.dps * 1.25 : b.dps) - (a.stab ? a.dps * 1.25 : a.dps)
           )
           .map(v => {
-            v.name = v.event ? `${v.name}(event)` : v.name;
-            return v.stab ? `**${v.name}**` : v.name;
+            let name = v.event ? `${v.name}(이벤트)` : v.name;
+            return v.stab ? `**${name}**` : name;
           })
           .join(" · ");
       }
@@ -123,8 +123,8 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest(
               (b.stab ? b.dps * 1.25 : b.dps) - (a.stab ? a.dps * 1.25 : a.dps)
           )
           .map(v => {
-            v.name = v.event ? `${v.name}(이벤트)` : v.name;
-            return v.stab ? `**${v.name}**` : v.name;
+            let name = v.event ? `${v.name}(이벤트)` : v.name;
+            return v.stab ? `**${name}**` : name;
           })
           .join(" · ");
       }
