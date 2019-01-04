@@ -75,6 +75,8 @@ var (
 )
 
 func main() {
+	// crawl()
+
 	pokemonList := []*Pokemon{}
 
 	filepath.Walk("./raws", func(path string, info os.FileInfo, err error) error {
@@ -147,10 +149,10 @@ func main() {
 		})
 
 		pokemonList = append(pokemonList, &Pokemon{
-			Name:     strings.TrimSpace(doc.Find(`h1.mobile-hidden`).Contents().Not("#forms").Text()),
+			Name:     strings.TrimSpace(doc.Find(`div.title h1`).Text()),
 			Number:   stoInt(numberRe.FindStringSubmatch(string(b))),
 			Form:     getForm(doc.Find(`title`).Text()),
-			Classify: classifyMap[strings.TrimSpace(doc.Find(`h1.mobile-hidden`).ReplaceWith("#forms").Text())],
+			Classify: classifyMap[strings.TrimSpace(doc.Find(`div.title h1`).Text())],
 			Info:     strings.Trim(strings.TrimSpace(doc.Find(`p.description`).Text()), `"`),
 			Types:    splitTypes(doc.Find(`div.large-type div`)),
 			ATK:      toInt(doc.Find(`.table-stats:first-child tr:nth-child(1) td:nth-child(2)`).Text()),
@@ -234,9 +236,10 @@ func getForm(s string) string {
 	return "캐스퐁"
 }
 
+var formRe = regexp.MustCompile(`\s\(.*\)`)
+
 func trimName(s string) string {
-	s = strings.TrimSuffix(s, " (캐스퐁의 모습)")
-	s = strings.TrimSuffix(s, " (알로라의 모습)")
+	s = formRe.ReplaceAllString(s, "")
 	return s
 }
 

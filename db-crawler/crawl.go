@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/grengojbo/goquery"
@@ -12,8 +13,8 @@ import (
 
 func crawl() {
 	wg := sync.WaitGroup{}
-	wg.Add(386)
-	for code := 1; code <= 386; code++ {
+	for code := 1; code <= 493; code++ {
+		wg.Add(1)
 		go fetch(&wg, code)
 	}
 	wg.Wait()
@@ -43,24 +44,33 @@ func fetch(wg *sync.WaitGroup, code int) {
 	}
 
 	if doc.Find(`.forms-block .forms a`).Length() > 1 {
-		url := fmt.Sprintf("https://pokemon.gameinfo.io/ko/pokemon/%v/alola-form", code)
-		doc, err := goquery.NewDocument(url)
-		if err != nil {
-			panic(err)
-		}
+		doc.Find(`.forms-block .forms a:not(:first-child)`).Each(func(i int, s *goquery.Selection) {
+			url, exists := s.Attr(`href`)
+			if !exists {
+				panic("not exist")
+			}
 
-		html, err := doc.Html()
-		if err != nil {
-			panic(err)
-		}
+			doc, err := goquery.NewDocument("https://pokemon.gameinfo.io" + url)
+			if err != nil {
+				panic(err)
+			}
 
-		filename, err := filepath.Abs(fmt.Sprintf("./raws/%v_alola.html", code))
-		if err != nil {
-			panic(err)
-		}
+			html, err := doc.Html()
+			if err != nil {
+				panic(err)
+			}
 
-		if err := ioutil.WriteFile(filename, []byte(html), os.ModePerm); err != nil {
-			panic(err)
-		}
+			tmp := strings.Split(url, "/")
+			form := tmp[len(tmp)-1]
+
+			filename, err := filepath.Abs(fmt.Sprintf("./raws/%v_%v.html", code, form))
+			if err != nil {
+				panic(err)
+			}
+
+			if err := ioutil.WriteFile(filename, []byte(html), os.ModePerm); err != nil {
+				panic(err)
+			}
+		})
 	}
 }

@@ -1,24 +1,178 @@
 [
   {
     "name": "멜탄",
-    "number": 891,
+    "number": 808,
     "form": "캐스퐁",
     "classify": "너트포켓몬",
     "info": "몸 대부분이 액체 금속으로 이루어져 있어 형태가 매우 유동적이며, 액상화한 손발을 사용하여 금속을 침식해서 체내에 흡수할 수 있다. 외부에서 흡수한 금속을 원료로 전기 에너지를 만들어 내는데, 생체 활동의 원천이 될 뿐만 아니라 눈에서 발사해서 공격하는 일도 있다고 한다. 호기심이 매우 왕성해서 온갖 것에 흥미를 보이는데, 매우 천진난만하며 다양한 표정을 보여준다.",
     "types": ["강철"],
-    "atk": 0,
-    "def": 0,
-    "hp": 0,
+    "atk": 118,
+    "def": 99,
+    "hp": 130,
     "url": "https://pokemongolive.com/ko/post/meltan-announcement/",
-    "max_cp": 0,
-    "base_capture_rate": 0,
+    "max_cp": 1068,
+    "base_capture_rate": 0.3,
     "base_flee_rate": 0,
-    "buddy_walk_distance": 0,
-    "image_url": "https://pokemon.gameinfo.io/images/pokemon-go/891-00.png",
-    "evolution": [],
+    "buddy_walk_distance": 20,
+    "image_url": "https://pokemon.gameinfo.io/images/pokemon-go/808-00.png",
+    "evolution": ["멜탄", "멜메탈"],
     "weaknesses_types": ["불꽃", "땅", "격투"],
-    "quick": [],
-    "charge": [],
-    "counters": []
+    "quick": [
+      {
+        "name": "전기쇼크",
+        "type": "전기",
+        "dps": 8.3,
+        "stab": false,
+        "event": false
+      }
+    ],
+    "charge": [
+      {
+        "name": "러스터캐논",
+        "type": "강철",
+        "dps": 44.4,
+        "stab": true,
+        "event": false
+      },
+      {
+        "name": "10만볼트",
+        "type": "전기",
+        "dps": 32,
+        "stab": false,
+        "event": false
+      }
+    ],
+    "counters": [
+      {
+        "name": "파이어",
+        "form": "캐스퐁",
+        "quick": "회오리불꽃",
+        "charge": "오버히트",
+        "percentage": 1
+      },
+      {
+        "name": "버섯모",
+        "form": "캐스퐁",
+        "quick": "카운터",
+        "charge": "폭발펀치",
+        "percentage": 0.99
+      },
+      {
+        "name": "부스터",
+        "form": "캐스퐁",
+        "quick": "회오리불꽃",
+        "charge": "오버히트",
+        "percentage": 0.99
+      },
+      {
+        "name": "번치코",
+        "form": "캐스퐁",
+        "quick": "카운터",
+        "charge": "오버히트",
+        "percentage": 0.98
+      },
+      {
+        "name": "괴력몬",
+        "form": "캐스퐁",
+        "quick": "카운터",
+        "charge": "폭발펀치",
+        "percentage": 0.96
+      }
+    ]
+  },
+  {
+    "name": "멜메탈",
+    "number": 809,
+    "form": "캐스퐁",
+    "classify": "너트포켓몬",
+    "info": "철을 만들어내는 힘을 가졌다고 추앙받았었다. 모종의 이유로 3000년의 세월이 흘러 되살아났다.",
+    "types": ["강철"],
+    "atk": 226,
+    "def": 190,
+    "hp": 264,
+    "url": "https://pokemongolive.com/ko/post/meltan-announcement/",
+    "max_cp": 3599,
+    "base_capture_rate": 0.3,
+    "base_flee_rate": 0,
+    "buddy_walk_distance": 20,
+    "image_url": "https://pokemon.gameinfo.io/images/pokemon-go/809-00.png",
+    "evolution": ["멜탄", "멜메탈"],
+    "weaknesses_types": ["불꽃", "땅", "격투"],
+    "quick": [
+      {
+        "name": "전기쇼크",
+        "type": "전기",
+        "dps": 8.3,
+        "stab": false,
+        "event": false
+      }
+    ],
+    "charge": [
+      {
+        "name": "파괴광선",
+        "type": "노말",
+        "dps": 39.5,
+        "stab": false,
+        "event": false
+      },
+      {
+        "name": "러스터캐논",
+        "type": "강철",
+        "dps": 44.4,
+        "stab": true,
+        "event": false
+      },
+      {
+        "name": "스톤샤워",
+        "type": "바위",
+        "dps": 29.6,
+        "stab": false,
+        "event": false
+      },
+      {
+        "name": "10만볼트",
+        "type": "전기",
+        "dps": 32,
+        "stab": false,
+        "event": false
+      }
+    ],
+    "counters": [
+      {
+        "name": "파이어",
+        "form": "캐스퐁",
+        "quick": "회오리불꽃",
+        "charge": "오버히트",
+        "percentage": 1
+      },
+      {
+        "name": "버섯모",
+        "form": "캐스퐁",
+        "quick": "카운터",
+        "charge": "폭발펀치",
+        "percentage": 0.99
+      },
+      {
+        "name": "부스터",
+        "form": "캐스퐁",
+        "quick": "회오리불꽃",
+        "charge": "오버히트",
+        "percentage": 0.99
+      },
+      {
+        "name": "번치코",
+        "form": "캐스퐁",
+        "quick": "카운터",
+        "charge": "오버히트",
+        "percentage": 0.98
+      },
+      {
+        "name": "괴력몬",
+        "form": "캐스퐁",
+        "quick": "카운터",
+        "charge": "폭발펀치",
+        "percentage": 0.96
+      }
+    ]
   }
 ]
