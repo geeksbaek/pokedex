@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -72,10 +73,19 @@ type Counter struct {
 
 var (
 	numberRe = regexp.MustCompile(`pokemon = { id: (\d+), name`)
+	doCrawl  bool
 )
 
+func init() {
+	flag.BoolVar(&doCrawl, "crawl", true, "크롤링 수행 여부")
+}
+
 func main() {
-	// crawl()
+	flag.Parse()
+
+	if doCrawl {
+		crawl()
+	}
 
 	pokemonList := []*Pokemon{}
 
