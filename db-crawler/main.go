@@ -77,7 +77,7 @@ var (
 )
 
 func init() {
-	flag.BoolVar(&doCrawl, "crawl", true, "크롤링 수행 여부")
+	flag.BoolVar(&doCrawl, "crawl", false, "크롤링 수행 여부")
 }
 
 func main() {
@@ -162,7 +162,7 @@ func main() {
 			Name:     strings.TrimSpace(doc.Find(`div.title h1`).Text()),
 			Number:   stoInt(numberRe.FindStringSubmatch(string(b))),
 			Form:     getForm(doc.Find(`title`).Text()),
-			Classify: classifyMap[strings.TrimSpace(doc.Find(`div.title h1`).Text())],
+			Classify: fetchClassify(strings.TrimSpace(doc.Find(`div.title h1`).Text())),
 			Info:     strings.Trim(strings.TrimSpace(doc.Find(`p.description`).Text()), `"`),
 			Types:    splitTypes(doc.Find(`div.large-type div`)),
 			ATK:      toInt(doc.Find(`.table-stats:first-child tr:nth-child(1) td:nth-child(2)`).Text()),

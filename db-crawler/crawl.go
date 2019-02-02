@@ -74,3 +74,18 @@ func fetch(wg *sync.WaitGroup, code int) {
 		})
 	}
 }
+
+// TODO.
+// 미리 fetch하여 파일로 기록해두도록 수정할 것
+func fetchClassify(pokemonName string) string {
+	if classify, ok := classifyMap[pokemonName]; ok {
+		return classify
+	}
+
+	doc, err := goquery.NewDocument(fmt.Sprintf("https://pokemon.fandom.com/ko/wiki/%v", pokemonName))
+	if err != nil {
+		return ""
+	}
+
+	return strings.TrimSpace(doc.Find("div.infobox-pokemon > table > tbody > tr:nth-child(2) > td:nth-child(2)").Text())
+}
