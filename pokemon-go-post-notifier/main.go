@@ -74,7 +74,7 @@ func notify(ps Posts) error {
 	}
 
 	for _, p := range ps {
-		msg := tgbotapi.NewMessageToChannel("@pgopost", p.String())
+		msg := tgbotapi.NewMessageToChannel("@"+os.Getenv("TELEGRAM_CHANNEL_USERNAME"), p.String())
 		if _, err := bot.Send(msg); err != nil {
 			log.Println(err)
 			return err
