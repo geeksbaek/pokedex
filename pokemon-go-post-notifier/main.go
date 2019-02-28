@@ -46,16 +46,27 @@ func (oldps Posts) Diff(newps Posts) (diffps Posts) {
 }
 
 func main() {
+	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_TOKEN"))
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	target := "@" + os.Getenv("TELEGRAM_CHANNEL_USERNAME")
+	msg := tgbotapi.NewMessageToChannel(target, "Bot을 시작합니다.")
+	if _, err := bot.Send(msg); err != nil {
+		log.Fatal(err)
+	}
+
 	ticker := time.Tick(time.Second * 10)
 	for range ticker {
-		go task()
+		go task(bot)
 	}
 }
 
-func task() {
+func task(bot *tgbotapi.BotAPI) {
 	diffPosts := globalPosts.Diff(fetchPosts())
 
-	go notify(diffPosts)
+	go notify(bot, diffPosts)
 
 	for k, post := range diffPosts {
 		log.Printf("new notice: %v", post.Subject)
@@ -63,25 +74,17 @@ func task() {
 	}
 }
 
-func notify(ps Posts) error {
+func notify(bot *tgbotapi.BotAPI, ps Posts) {
 	log.Println("notify started")
 	defer log.Println("notify ended")
 
-	bot, err := tgbotapi.NewBotAPI(os.Getenv("TELEGRAM_TOKEN"))
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-
+	target := "@" + os.Getenv("TELEGRAM_CHANNEL_USERNAME")
 	for _, p := range ps {
-		msg := tgbotapi.NewMessageToChannel("@"+os.Getenv("TELEGRAM_CHANNEL_USERNAME"), p.String())
+		msg := tgbotapi.NewMessageToChannel(target, p.String())
 		if _, err := bot.Send(msg); err != nil {
 			log.Println(err)
-			return err
 		}
 	}
-
-	return nil
 }
 
 func fetchPosts() (_posts Posts) {
