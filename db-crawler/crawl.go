@@ -11,19 +11,28 @@ import (
 	"github.com/grengojbo/goquery"
 )
 
-func crawl() {
+func crawl(locale string) {
 	wg := sync.WaitGroup{}
 	for code := 1; code <= 493; code++ {
 		wg.Add(1)
-		go fetch(&wg, code)
+		go fetch(&wg, code, locale)
 	}
+
+	// 멜탄
+	wg.Add(1)
+	go fetch(&wg, 808, locale)
+
+	// 멜메탈
+	wg.Add(1)
+	go fetch(&wg, 809, locale)
+
 	wg.Wait()
 }
 
-func fetch(wg *sync.WaitGroup, code int) {
+func fetch(wg *sync.WaitGroup, code int, locale string) {
 	defer wg.Done()
 
-	url := fmt.Sprintf("https://pokemon.gameinfo.io/ko/pokemon/%v", code)
+	url := fmt.Sprintf("https://pokemon.gameinfo.io/"+locale+"/pokemon/%v", code)
 	doc, err := goquery.NewDocument(url)
 	if err != nil {
 		panic(err)
@@ -34,7 +43,7 @@ func fetch(wg *sync.WaitGroup, code int) {
 		panic(err)
 	}
 
-	filename, err := filepath.Abs(fmt.Sprintf("./raws/%v.html", code))
+	filename, err := filepath.Abs(fmt.Sprintf("./raws/"+locale+"/%v.html", code))
 	if err != nil {
 		panic(err)
 	}
@@ -63,7 +72,7 @@ func fetch(wg *sync.WaitGroup, code int) {
 			tmp := strings.Split(url, "/")
 			form := tmp[len(tmp)-1]
 
-			filename, err := filepath.Abs(fmt.Sprintf("./raws/%v_%v.html", code, form))
+			filename, err := filepath.Abs(fmt.Sprintf("./raws/"+locale+"/%v_%v.html", code, form))
 			if err != nil {
 				panic(err)
 			}
@@ -77,15 +86,15 @@ func fetch(wg *sync.WaitGroup, code int) {
 
 // TODO.
 // 미리 fetch하여 파일로 기록해두도록 수정할 것
-func fetchClassify(pokemonName string) string {
+func fetchClassify(pokemonName string, locale string) string {
 	if classify, ok := classifyMap[pokemonName]; ok {
 		return classify
 	}
 
-	doc, err := goquery.NewDocument(fmt.Sprintf("https://pokemon.fandom.com/ko/wiki/%v", pokemonName))
+	doc, err := goquery.NewDocument(fmt.Sprintf("https://pokemon.fandom.com/"+locale+"/wiki/%v", pokemonName))
 	if err != nil {
 		return ""
 	}
 
-	return strings.TrimSpace(doc.Find("div.infobox-pokemon > table > tbody > tr:nth-child(2) > td:nth-child(2)").Text())
+	return strings.TrimSpace(doc.Find("div.infobox-pokemon > table > tbody > tr:nth-child(2) > td:nth-child(2)").First().Text())
 }

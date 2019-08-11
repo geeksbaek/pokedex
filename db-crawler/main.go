@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -26,6 +27,8 @@ type Pokemon struct {
 	ATK      int      `json:"atk"`      // 공격
 	DEF      int      `json:"def"`      // 방어
 	HP       int      `json:"hp"`       // 체력
+
+	HasMultiFormType bool `json:"has_multi_form_type"` // 다른 폼 타입의 존재 여부
 
 	URL string `json:"url"` // 관련 링크
 
@@ -73,133 +76,173 @@ type Counter struct {
 
 var (
 	numberRe = regexp.MustCompile(`pokemon = { id: (\d+), name`)
+	locales  = []string{"ko", "en"}
 	doCrawl  bool
 )
 
 func init() {
 	flag.BoolVar(&doCrawl, "crawl", false, "크롤링 수행 여부")
+	for _, locale := range locales {
+		os.MkdirAll("./raws/"+locale, os.ModePerm)
+		os.MkdirAll("../functions/data/"+locale, os.ModePerm)
+	}
 }
 
 func main() {
 	flag.Parse()
 
 	if doCrawl {
-		crawl()
+		for _, locale := range locales {
+			crawl(locale)
+		}
 	}
 
-	pokemonList := []*Pokemon{}
+	for _, locale := range locales {
+		pokemonList := []*Pokemon{}
+		formMap := map[string]bool{}
 
-	filepath.Walk("./raws", func(path string, info os.FileInfo, err error) error {
-		if info.IsDir() {
-			return nil
-		}
-
-		b, err := ioutil.ReadFile(path)
-		if err != nil {
-			return err
-		}
-
-		doc, err := goquery.NewDocumentFromReader(bytes.NewReader(b))
-		if err != nil {
-			return err
-		}
-
-		// if doc.Find(`h1.p-legendary`).Length() > 0 {
-		// 	fmt.Printf("전설의 포켓몬: %v\n", path)
-		// }
-
-		// if doc.Find(`h1.p-mythical`).Length() > 0 {
-		// 	fmt.Printf("환상의 포켓몬: %v\n", path)
-		// }
-
-		quickSkillList := []*Skill{}
-		doc.Find(`article.all-moves table.moves:first-child tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
-			t := typeMap[s.Find(`td:first-child span`).AttrOr(`data-type`, ``)]
-			name := strings.TrimSpace(strings.TrimRight(strings.TrimSpace(s.Find(`td:first-child a`).Text()), "(event)"))
-			dps := sToFloat(s.Find(`td:last-child`).Text())
-			isStab := s.HasClass(`stab`)
-			isEvent := s.HasClass(`event`)
-			quickSkillList = append(quickSkillList, &Skill{name, t, dps, isStab, isEvent})
-		})
-
-		chargeSkillList := []*Skill{}
-		doc.Find(`article.all-moves table.moves:nth-child(2) tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
-			t := typeMap[s.Find(`td:first-child span`).AttrOr(`data-type`, ``)]
-			name := strings.TrimSpace(strings.TrimRight(strings.TrimSpace(s.Find(`td:first-child a`).Text()), "(event)"))
-			dps := sToFloat(s.Find(`td:last-child`).Text())
-			isStab := s.HasClass(`stab`)
-			isEvent := s.HasClass(`event`)
-			chargeSkillList = append(chargeSkillList, &Skill{name, t, dps, isStab, isEvent})
-		})
-
-		counters := []*Counter{}
-		doc.Find(`table.table-counter.all tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
-			counters = append(counters, &Counter{
-				Name:        trimName(strings.TrimSpace(s.Find(`td:nth-child(1)`).Text())),
-				Form:        getForm(strings.TrimSpace(s.Find(`td:nth-child(1)`).Text())),
-				QuickSkill:  strings.TrimSpace(s.Find(`td:nth-child(2)`).Text()),
-				ChargeSkill: strings.TrimSpace(s.Find(`td:nth-child(3)`).Text()),
-				Percentage:  perToFloat(strings.TrimSpace(s.Find(`td:nth-child(4)`).Text())),
-			})
-		})
-
-		evolution := []string{}
-		doc.Find(`div.evolution div.pokemon`).Each(func(i int, s *goquery.Selection) {
-			evolution = append(evolution, strings.TrimSpace(s.Text()))
-		})
-
-		weaknessesTypes := []string{}
-		breakpoint := ""
-		doc.Find(`table.weaknesses tbody tr`).Each(func(i int, s *goquery.Selection) {
-			if breakpoint != "" && breakpoint != s.Find(`span`).Text() {
-				return
+		filepath.Walk("./raws/"+locale, func(path string, info os.FileInfo, err error) error {
+			if info.IsDir() {
+				return nil
 			}
-			breakpoint = s.Find(`span`).Text()
-			weaknessesTypes = append(weaknessesTypes, typeMap[strings.TrimSpace(s.Find(`a`).Text())])
+
+			b, err := ioutil.ReadFile(path)
+			if err != nil {
+				return err
+			}
+
+			doc, err := goquery.NewDocumentFromReader(bytes.NewReader(b))
+			if err != nil {
+				return err
+			}
+
+			if doc.Find(`article.images-block > div > div > a:nth-child(1) > picture`).Length() == 0 {
+				return nil
+			}
+
+			// if doc.Find(`h1.p-legendary`).Length() > 0 {
+			// 	fmt.Printf("전설의 포켓몬: %v\n", path)
+			// }
+
+			// if doc.Find(`h1.p-mythical`).Length() > 0 {
+			// 	fmt.Printf("환상의 포켓몬: %v\n", path)
+			// }
+
+			quickSkillList := []*Skill{}
+			doc.Find(`article.all-moves table.moves:first-child tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
+				t := convTypeLang(s.Find(`td:first-child span`).AttrOr(`data-type`, ``), locale)
+				name := strings.TrimSpace(strings.TrimRight(strings.TrimSpace(s.Find(`td:first-child a`).Text()), "(event)"))
+				dps := sToFloat(s.Find(`td:last-child`).Text())
+				isStab := s.HasClass(`stab`)
+				isEvent := s.HasClass(`event`)
+				quickSkillList = append(quickSkillList, &Skill{name, t, dps, isStab, isEvent})
+			})
+
+			chargeSkillList := []*Skill{}
+			doc.Find(`article.all-moves table.moves:nth-child(2) tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
+				t := convTypeLang(s.Find(`td:first-child span`).AttrOr(`data-type`, ``), locale)
+				name := strings.TrimSpace(strings.TrimRight(strings.TrimSpace(s.Find(`td:first-child a`).Text()), "(event)"))
+				dps := sToFloat(s.Find(`td:last-child`).Text())
+				isStab := s.HasClass(`stab`)
+				isEvent := s.HasClass(`event`)
+				chargeSkillList = append(chargeSkillList, &Skill{name, t, dps, isStab, isEvent})
+			})
+
+			counters := []*Counter{}
+			doc.Find(`table.table-counter.all tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
+				counters = append(counters, &Counter{
+					Name:        trimName(strings.TrimSpace(s.Find(`td:nth-child(1)`).Text())),
+					Form:        getForm(strings.TrimSpace(s.Find(`td:nth-child(1)`).Text()), locale),
+					QuickSkill:  strings.TrimSpace(s.Find(`td:nth-child(2)`).Text()),
+					ChargeSkill: strings.TrimSpace(s.Find(`td:nth-child(3)`).Text()),
+					Percentage:  perToFloat(strings.TrimSpace(s.Find(`td:nth-child(4)`).Text())),
+				})
+			})
+
+			evolution := []string{}
+			doc.Find(`div.evolution div.pokemon`).Each(func(i int, s *goquery.Selection) {
+				evolution = append(evolution, strings.TrimSpace(s.Text()))
+			})
+
+			weaknessesTypes := []string{}
+			breakpoint := ""
+			doc.Find(`table.weaknesses tbody tr`).Each(func(i int, s *goquery.Selection) {
+				if breakpoint != "" && breakpoint != s.Find(`span`).Text() {
+					return
+				}
+				breakpoint = s.Find(`span`).Text()
+				weaknessesTypes = append(weaknessesTypes, convTypeLang(strings.TrimSpace(s.Find(`a`).Text()), locale))
+			})
+
+			pokemonList = append(pokemonList, &Pokemon{
+				Name:     strings.TrimSpace(strings.Split(doc.Find(`div.title h1`).Text(), "-")[0]),
+				Number:   stoInt(numberRe.FindStringSubmatch(string(b))),
+				Form:     getFormFromTitle(doc.Find(`section.heading > div.title > h1`).Text(), locale),
+				Classify: fetchClassify(strings.TrimSpace(strings.Split(doc.Find(`div.title h1`).Text(), "-")[0]), locale),
+				Info:     strings.Trim(strings.TrimSpace(doc.Find(`p.description`).Text()), `"`),
+				Types:    splitTypes(doc.Find(`div.large-type div`), locale),
+				ATK:      toInt(doc.Find(`.table-stats:first-child tr:nth-child(1) td:nth-child(2)`).Text()),
+				DEF:      toInt(doc.Find(`.table-stats:first-child tr:nth-child(2) td:nth-child(2)`).Text()),
+				HP:       toInt(doc.Find(`.table-stats:first-child tr:nth-child(3) td:nth-child(2)`).Text()),
+				URL:      doc.Find(`meta[property="og:url"]`).First().AttrOr("content", ""),
+				// CPRank:            toInt(doc.Find(`#cont > div > span > em`).Text()),
+				MaxCP:             toInt(doc.Find(`article.pokemon-stats table.table-stats:nth-child(3) tr:last-child td:nth-child(2)`).Contents().Not(`a`).Text()),
+				BaseCaptureRate:   perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(1) td:last-child`).Text()),
+				BaseFleeRate:      perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(2) td:last-child`).Text()),
+				BuddyWalkDistance: kmToInt(doc.Find(`table.table-stats:last-child tr:nth-child(3) td:last-child`).Text()),
+				ImageURL:          getImageURL(doc),
+				Evolution:         evolution,
+				WeaknessesTypes:   weaknessesTypes,
+				QuickSkillList:    quickSkillList,
+				ChargeSkillList:   chargeSkillList,
+				Counters:          counters,
+			})
+
+			formMap[getFormFromTitle(doc.Find(`section.heading > div.title > h1`).Text(), locale)] = true
+
+			return nil
 		})
 
-		pokemonList = append(pokemonList, &Pokemon{
-			Name:     strings.TrimSpace(doc.Find(`div.title h1`).Text()),
-			Number:   stoInt(numberRe.FindStringSubmatch(string(b))),
-			Form:     getForm(doc.Find(`title`).Text()),
-			Classify: fetchClassify(strings.TrimSpace(doc.Find(`div.title h1`).Text())),
-			Info:     strings.Trim(strings.TrimSpace(doc.Find(`p.description`).Text()), `"`),
-			Types:    splitTypes(doc.Find(`div.large-type div`)),
-			ATK:      toInt(doc.Find(`.table-stats:first-child tr:nth-child(1) td:nth-child(2)`).Text()),
-			DEF:      toInt(doc.Find(`.table-stats:first-child tr:nth-child(2) td:nth-child(2)`).Text()),
-			HP:       toInt(doc.Find(`.table-stats:first-child tr:nth-child(3) td:nth-child(2)`).Text()),
-			// CPRank:            toInt(doc.Find(`#cont > div > span > em`).Text()),
-			MaxCP:             toInt(doc.Find(`article.pokemon-stats table.table-stats:nth-child(3) tr:last-child td:nth-child(2)`).Contents().Not(`a`).Text()),
-			BaseCaptureRate:   perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(1) td:last-child`).Text()),
-			BaseFleeRate:      perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(2) td:last-child`).Text()),
-			BuddyWalkDistance: kmToInt(doc.Find(`table.table-stats:last-child tr:nth-child(3) td:last-child`).Text()),
-			ImageURL:          getImageURL(doc),
-			Evolution:         evolution,
-			WeaknessesTypes:   weaknessesTypes,
-			QuickSkillList:    quickSkillList,
-			ChargeSkillList:   chargeSkillList,
-			Counters:          counters,
-		})
+		fmt.Println(formMap)
 
-		return nil
-	})
-
-	sort.Slice(pokemonList, func(i, j int) bool {
-		if pokemonList[i].Number < pokemonList[j].Number {
+		sort.Slice(pokemonList, func(i, j int) bool {
+			if pokemonList[i].Number < pokemonList[j].Number {
+				return true
+			}
+			if pokemonList[i].Number > pokemonList[j].Number {
+				return false
+			}
 			return true
-		}
-		if pokemonList[i].Number > pokemonList[j].Number {
-			return false
-		}
-		return true
-	})
+		})
 
-	f, err := os.Create("../functions/data/pokemon.json")
-	if err != nil {
-		panic(err)
-	}
-	if err := json.NewEncoder(f).Encode(pokemonList); err != nil {
-		panic(err)
+		for i, p1 := range pokemonList {
+			hasMultiFormType := false
+			for j, p2 := range pokemonList {
+				if i != j && p1.Name == p2.Name {
+					hasMultiFormType = true
+					break
+				}
+			}
+			pokemonList[i].HasMultiFormType = hasMultiFormType
+		}
+
+		f, err := os.Create("../functions/data/" + locale + "/pokemon.json")
+		if err != nil {
+			panic(err)
+		}
+		encoder := json.NewEncoder(f)
+		encoder.SetIndent("", "\t")
+		if err := encoder.Encode(pokemonList); err != nil {
+			panic(err)
+		}
+
+		f, err = os.Create("../functions/data/" + locale + "/pokemon.min.json")
+		if err != nil {
+			panic(err)
+		}
+		if err := json.NewEncoder(f).Encode(pokemonList); err != nil {
+			panic(err)
+		}
 	}
 }
 
@@ -213,10 +256,10 @@ func toInt(s string) int {
 	return i
 }
 
-func splitTypes(s *goquery.Selection) []string {
+func splitTypes(s *goquery.Selection, locale string) []string {
 	ret := []string{}
 	s.Each(func(i int, s *goquery.Selection) {
-		ret = append(ret, typeMap[s.Text()])
+		ret = append(ret, convTypeLang(s.Text(), locale))
 	})
 	return ret
 }
@@ -236,21 +279,32 @@ func kmToInt(s string) int {
 	return i
 }
 
-func getForm(s string) string {
-	switch {
-	case strings.Contains(s, "캐스퐁의 모습"):
-		return "캐스퐁"
-	case strings.Contains(s, "알로라의 모습"):
-		return "알로라"
+var formRe = regexp.MustCompile(`\s\((.*)\)`)
+
+func getForm(s string, locale string) string {
+	finded := formRe.FindStringSubmatch(s)
+	if len(finded) == 0 {
+		if locale == "ko" {
+			return "캐스퐁"
+		}
+		return "Normal"
 	}
-	return "캐스퐁"
+	return strings.TrimSpace(strings.TrimRight(strings.TrimRight(finded[1], "의 모습"), "Form"))
 }
 
-var formRe = regexp.MustCompile(`\s\(.*\)`)
+func getFormFromTitle(s string, locale string) string {
+	fields := strings.Split(s, "-")
+	if len(fields) == 1 {
+		if locale == "ko" {
+			return "캐스퐁"
+		}
+		return "Normal"
+	}
+	return strings.TrimSpace(strings.TrimRight(strings.TrimRight(strings.TrimSpace(fields[1]), "의 모습"), "Form"))
+}
 
 func trimName(s string) string {
-	s = formRe.ReplaceAllString(s, "")
-	return s
+	return strings.Fields(s)[0]
 }
 
 func getImageURL(doc *goquery.Document) string {

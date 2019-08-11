@@ -1,62 +1,78 @@
 {
-  "파오리": {
-    "note": "지역 한정 포켓몬  \n동아시아에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/hMP8ync_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "83": {
+    "name": "파오리",
+    "where": "동아시아"
   },
-  "켄타로스": {
-    "note": "지역 한정 포켓몬  \n북 아메리카, 남 아메리카, 캐나다에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/DOGrFU1_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "115": {
+    "name": "캥카",
+    "where": "호주"
   },
-  "마임맨": {
-    "note": "지역 한정 포켓몬  \n유럽에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/BaPTBvi_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "122": {
+    "name": "마임맨",
+    "where": "유럽"
   },
-  "캥카": {
-    "note": "지역 한정 포켓몬  \n호주에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/GmjMYta_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "128": {
+    "name": "켄타로스",
+    "where": "북미 (캐나다 남부, 미국 대륙 대부분, 멕시코 일부)"
   },
-  "헤라크로스": {
-    "note": "지역 한정 포켓몬  \n라틴 아메리카, 남부 플로리다 및 텍사스에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/6MOyKRQ_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "214": {
+    "name": "헤라크로스",
+    "where": "남미, 중미, 멕시코 및 남부 플로리다 및 텍사스"
   },
-  "코산호": {
-    "note": "지역 한정 포켓몬  \n열대 지방 및 적도 근처, 특히 해안과 수역 근처에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/lMNTDPV_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "222": {
+    "name": "코산호",
+    "where": "적도 근처 (해안 및 해안 인접 지역)"
   },
-  "쟝고": {
-    "note": "지역 한정 포켓몬  \n유럽, 아시아, 오세아니아에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/8zftuQl_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "324": {
+    "name": "코터스",
+    "where": "서부 / 동남아시아"
   },
-  "세비퍼": {
-    "note": "지역 한정 포켓몬  \n북 아메리카, 남 아메리카, 아프리카에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/tNCkoYn_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "335": {
+    "name": "쟝고",
+    "where": "유럽, 아시아, 호주"
   },
-  "시라칸": {
-    "note": "지역 한정 포켓몬  \n뉴질랜드, 피지, 바누아투, 뉴칼레도니아에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/I4nG2xj_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "336": {
+    "name": "세비퍼",
+    "where": "북아메리카, 남아메리카, 아프리카"
   },
-  "코터스": {
-    "note": "지역 한정 포켓몬  \n인도, 네팔, 태국, 말레이시아, 베트남에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/gMsm395_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "337": {
+    "name": "솔록",
+    "where": "북아메리카, 남아메리카 및 아프리카"
   },
-  "솔록": {
-    "note": "지역 한정 포켓몬  \n유럽, 아시아, 오세아니아에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/8zftuQl_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "338": {
+    "name": "루나톤",
+    "where": "유럽, 아시아 및 호주"
   },
-  "루나톤": {
-    "note": "지역 한정 포켓몬  \n북 아메리카, 남 아메리카, 아프리카에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/tNCkoYn_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "369": {
+    "name": "시라칸",
+    "where": "뉴질랜드, 피지, 바누아투, 뉴 칼레도니아"
   },
-  "트로피우스": {
-    "note": "지역 한정 포켓몬  \n아프리카, 지중해에 근접한 남 유럽에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/nCEi5pQ_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "314": {
+    "name": "네오비트",
+    "where": "북아메리카, 남아메리카, 아프리카"
   },
-  "볼비트": {
-    "note": "지역 한정 포켓몬  \n유럽, 아시아, 오세아니아에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/8zftuQl_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "313": {
+    "name": "볼비트",
+    "where": "유럽, 아시아, 호주"
   },
-  "네오비트": {
-    "note": "지역 한정 포켓몬  \n북 아메리카, 남 아메리카, 아프리카에서 만날 수 있는 것 같다.",
-    "image_url": "https://i.imgur.com/tNCkoYn_d.jpg?maxwidth=1920&shape=thumb&fidelity=heigh"
+  "357": {
+    "name": "트로피우스",
+    "where": "아프리카, 중동, 지중해 (크레타)"
+  },
+  "417": {
+    "name": "파치리스",
+    "where": "캐나다, 러시아 및 알래스카"
+  },
+  "441": {
+    "name": "페라페",
+    "where": "남반구"
+  },
+  "455": {
+    "name": "무스틈니",
+    "where": "미국 남동부 (테네시, 사우스 캐롤라이나, 노스 캐롤라이나, 앨라배마, 조지아, 플로리다)"
+  },
+  "442": {
+    "name": "깝질무",
+    "where": "분홍색은 자오선의 동쪽, 파랑색은 자오선의 서쪽"
   }
 }
