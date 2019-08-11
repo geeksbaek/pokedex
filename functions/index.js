@@ -16,6 +16,8 @@ const Josa = require("josa-js");
 
 const functions = require("firebase-functions");
 const fs = require("fs");
+const rp = require("request-promise-native");
+const cheerio = require("cheerio");
 
 const app = dialogflow({ debug: true });
 
@@ -27,6 +29,9 @@ const pokedexEn = JSON.parse(
 const mythical = JSON.parse(fs.readFileSync("data/mythical.json", "utf8"));
 const legendary = JSON.parse(fs.readFileSync("data/legendary.json", "utf8"));
 const regional = JSON.parse(fs.readFileSync("data/regional.json", "utf8"));
+const weather_boost = JSON.parse(
+  fs.readFileSync("data/weather_boost.json", "utf8")
+);
 
 const reNameForm = /([^ ]+) \((.*)\)/;
 
@@ -64,13 +69,8 @@ app.intent("포켓몬 검색", (conv, _, option) => {
 
   // 검색 결과가 하나인 경우 하나의 포켓몬을 BasicCard 로 응답한다.
   if (pokemons.length === 1) {
-    conv.ask(
-      `<speak>` +
-        `${name}.<break time="300ms"/>` +
-        `${pokemons[0].classify}.  \n<break time="300ms"/>` +
-        `${pokemons[0].info}` +
-        `</speak>`
-    );
+    conv.ask(`${name}. ${pokemons[0].classify}.`);
+    conv.ask(`${pokemons[0].info}`);
     conv.ask(buildPokemonCard(pokemons[0]));
     conv.ask(buildSuggestions(pokemons[0]));
     return;
@@ -78,8 +78,8 @@ app.intent("포켓몬 검색", (conv, _, option) => {
 
   // 검색 결과가 여러 개인 경우 포켓몬의 목록을 List 로 응답한다.
   conv.ask(
-    `여러 폼 타입의 ${Josa.r(name, "이/가")} 있다. ` +
-      `궁금한 포켓몬을 선택하시오.`
+    `여러 폼 타입의 ${Josa.r(name, "이/가")} 있습니다. ` +
+      `궁금한 포켓몬을 선택하세요.`
   );
   conv.ask(buildPokemonList(pokemons));
   conv.ask(new Suggestions(`❌ 닫기`));
@@ -161,6 +161,19 @@ app.intent("타입 검색", conv => {
   conv.ask(new Suggestions(`❌ 닫기`));
 });
 
+app.intent("이벤트 묻기", async conv => {
+  const $ = await rp({
+    uri: "https://pokemon.gameinfo.io/ko/events",
+    transform: body => cheerio.load(body)
+  });
+
+  let articles = $("#events > div.events.current article");
+  console.log(articles.html());
+
+  conv.ask(`지금 진행 중인 이벤트 ${articles.length}개를 찾았습니다.`);
+  conv.ask(new Suggestions(`❌ 닫기`));
+});
+
 const findPokemon = name => pokedex.filter(el => el.name === name);
 
 const findPokemonWithForm = (name, form) =>
@@ -188,7 +201,7 @@ const buildPokemonCard = pokemonObj => {
 
   return new BasicCard({
     text:
-      `💥  \n빠른 공격: ${pokemonObj.quick
+      `빠른 공격: ${pokemonObj.quick
         .sort(sortDPSWithStab)
         .map(buildChargeText)
         .join(" · ")}  \n` +
@@ -196,7 +209,10 @@ const buildPokemonCard = pokemonObj => {
         .sort(sortDPSWithStab)
         .map(buildChargeText)
         .join(" · ")}  \n  \n` +
-      `💫  \n최대 약점: ${buildFullWeaknesses(pokemonObj)}` +
+      `💫 최대 약점: ${buildFullWeaknesses(pokemonObj)}  \n  \n` +
+      `✨ 날씨 부스트: ${[
+        ...new Set(pokemonObj.types.map(t => weather_boost[t].name))
+      ].join(", ")}` +
       regionalText,
     title: `${buildFullName(pokemonObj)} #${("000" + pokemonObj.number).slice(
       -3
@@ -286,13 +302,18 @@ const buildCounterList = pokemonObj => {
 
 const buildSuggestions = pokemonObj => {
   return new Suggestions([
-    ...pokemonObj.has_multi_form_type
+    ...(pokemonObj.has_multi_form_type
       ? [pokemonObj.name, `💫 ${pokemonObj.name} (${pokemonObj.form})의 약점`]
-      : [`💫 ${pokemonObj.name}의 약점`],
+      : [`💫 ${pokemonObj.name}의 약점`]),
     ...pokemonObj.evolution.filter(el => el !== pokemonObj.name),
     buildFullType(pokemonObj),
     "❌ 닫기"
   ]);
+};
+
+const buildEventList = body => {
+  console.log(body);
+  return "...";
 };
 
 const buildFullType = pokemonObj => `${pokemonObj.types.join(" · ")} 타입`;
