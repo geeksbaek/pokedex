@@ -162,16 +162,31 @@ app.intent("타입 검색", conv => {
 });
 
 app.intent("이벤트 묻기", async conv => {
-  const $ = await rp({
-    uri: "https://pokemon.gameinfo.io/ko/events",
-    transform: body => cheerio.load(body)
-  });
+  conv.ask(
+    new BasicCard({
+      title: `무슨 이벤트가 열리고 있을까요?`,
+      buttons: new Button({
+        title: "이벤트 확인",
+        url: "https://pokemon.gameinfo.io/ko/events"
+      }),
+      image: new Image({
+        url: "https://pokemongolive.com/img/posts/gofest2019day3.jpg",
+        alt: "이벤트 이미지"
+      }),
+      display: "CROPPED"
+    })
+  );
 
-  let articles = $("#events > div.events.current article");
-  console.log(articles.html());
+  // const $ = await rp({
+  //   uri: "https://pokemon.gameinfo.io/ko/events",
+  //   transform: body => cheerio.load(body)
+  // });
 
-  conv.ask(`지금 진행 중인 이벤트 ${articles.length}개를 찾았습니다.`);
-  conv.ask(new Suggestions(`❌ 닫기`));
+  // let articles = $("#events > div.events.current article");
+  // console.log(articles.html());
+
+  // conv.ask(`지금 진행 중인 이벤트 ${articles.length}개를 찾았습니다.`);
+  // conv.ask(new Suggestions(`❌ 닫기`));
 });
 
 const findPokemon = name => pokedex.filter(el => el.name === name);
