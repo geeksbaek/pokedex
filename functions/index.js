@@ -3,7 +3,7 @@
 const {
   dialogflow,
   BasicCard,
-  BrowseCarousel,
+  Table,
   Permission,
   Button,
   List,
@@ -214,7 +214,7 @@ const findMostSimilarPokemons = (name, form) => {
 const buildPokemonCard = pokemonObj => {
   let regionalText = "";
   if (regional[pokemonObj.number]) {
-    regionalText = `  \n  \n📍 지역 한정: ${regional[pokemonObj.number].where}`;
+    regionalText = `  \n📍 지역 한정: ${regional[pokemonObj.number].where}`;
   }
 
   return new BasicCard({
@@ -227,10 +227,8 @@ const buildPokemonCard = pokemonObj => {
         .sort(sortDPSWithStab)
         .map(buildChargeText)
         .join(" · ")}  \n  \n` +
-      `💫 최대 약점: ${buildFullWeaknesses(pokemonObj)}  \n  \n` +
-      `✨ 날씨 부스트: ${[
-        ...new Set(pokemonObj.types.map(t => weather_boost[t].name))
-      ].join(", ")}` +
+      `💫 최대 약점: ${buildFullWeaknesses(pokemonObj)}  \n` +
+      `✨ 날씨 부스트: ${buildWeatherBoost(pokemonObj)}` +
       regionalText,
     title: `${buildFullName(pokemonObj)} #${("000" + pokemonObj.number).slice(
       -3
@@ -245,6 +243,46 @@ const buildPokemonCard = pokemonObj => {
       alt: buildFullName(pokemonObj)
     }),
     display: "CROPPED"
+  });
+};
+
+const buildPokemonCPChart = pokemonObj => {
+  return new Table({
+    title: "최대 CP 차트",
+    subtitle: `날씨 [${buildWeatherBoost(pokemonObj)}] 에 부스트 됨`,
+    image: new Image({
+      url: pokemonObj.image_url,
+      alt: buildFullName(pokemonObj)
+    }),
+    columns: [
+      {
+        header: "",
+        align: "LEADING"
+      },
+      {
+        header: "기본 CP",
+        align: "CENTER"
+      },
+      {
+        header: "부스트 CP",
+        align: "CENTER"
+      }
+    ],
+    rows: [
+      {
+        cells: ["레이드", "row 1 item 2", "row 1 item 3"],
+      },
+      {
+        cells: ["야생", "row 2 item 2", "row 2 item 3"],
+      },
+      {
+        cells: ["최대 레벨", "row 2 item 2", "row 2 item 3"]
+      }
+    ],
+    buttons: new Button({
+      title: "Button Text",
+      url: "https://assistant.google.com"
+    })
   });
 };
 
@@ -358,6 +396,9 @@ const buildChargeText = v => {
   let name = v.event ? `${v.name}(이벤트)` : v.name;
   return v.stab ? `**${name}**` : name;
 };
+
+const buildWeatherBoost = pokemonObj =>
+  [...new Set(pokemonObj.types.map(t => weather_boost[t].name))].join(", ");
 
 const sortDPSWithStab = (a, b) =>
   (b.stab ? b.dps * 1.2 : b.dps) - (a.stab ? a.dps * 1.2 : a.dps);
