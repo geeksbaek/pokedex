@@ -32,6 +32,9 @@ const regional = JSON.parse(fs.readFileSync("data/regional.json", "utf8"));
 const weather_boost = JSON.parse(
   fs.readFileSync("data/weather_boost.json", "utf8")
 );
+const nesting_species = JSON.parse(
+  fs.readFileSync("data/nesting_species.json", "utf8")
+);
 
 const reNameForm = /([^ ]+) \((.*)\)/;
 
@@ -122,7 +125,7 @@ app.intent("포켓몬 약점", (conv, _, option) => {
   );
 
   conv.ask(buildPokemonCounterList(pokemons));
-  conv.ask(new Suggestions(`❌ 닫기`));
+  conv.ask(new Suggestions([name, `❌ 닫기`]));
 });
 
 app.intent("타입 검색", conv => {
@@ -162,6 +165,7 @@ app.intent("타입 검색", conv => {
 });
 
 app.intent("이벤트 묻기", async conv => {
+  conv.ask("이벤트에 대한 정보입니다.");
   conv.ask(
     new BasicCard({
       title: `무슨 이벤트가 열리고 있을까요?`,
@@ -176,6 +180,7 @@ app.intent("이벤트 묻기", async conv => {
       display: "CROPPED"
     })
   );
+  conv.ask(new Suggestions(`❌ 닫기`));
 
   // const $ = await rp({
   //   uri: "https://pokemon.gameinfo.io/ko/events",
@@ -209,9 +214,7 @@ const findMostSimilarPokemons = (name, form) => {
 const buildPokemonCard = pokemonObj => {
   let regionalText = "";
   if (regional[pokemonObj.number]) {
-    regionalText = `  \n  \n📍  \n지역 한정: ${
-      regional[pokemonObj.number].where
-    }`;
+    regionalText = `  \n  \n📍 지역 한정: ${regional[pokemonObj.number].where}`;
   }
 
   return new BasicCard({
@@ -316,14 +319,19 @@ const buildCounterList = pokemonObj => {
 };
 
 const buildSuggestions = pokemonObj => {
-  return new Suggestions([
-    ...(pokemonObj.has_multi_form_type
-      ? [pokemonObj.name, `💫 ${pokemonObj.name} (${pokemonObj.form})의 약점`]
-      : [`💫 ${pokemonObj.name}의 약점`]),
-    ...pokemonObj.evolution.filter(el => el !== pokemonObj.name),
-    buildFullType(pokemonObj),
-    "❌ 닫기"
-  ]);
+  return new Suggestions(
+    [
+      ...(pokemonObj.has_multi_form_type
+        ? [pokemonObj.name, `💫 ${pokemonObj.name} (${pokemonObj.form})의 약점`]
+        : [`💫 ${pokemonObj.name}의 약점`]),
+      nesting_species.includes(pokemonObj.number)
+        ? `${pokemonObj.name} 둥지`
+        : null,
+      ...pokemonObj.evolution.filter(el => el !== pokemonObj.name),
+      buildFullType(pokemonObj),
+      "❌ 닫기"
+    ].filter(el => el != null)
+  );
 };
 
 const buildEventList = body => {
@@ -357,5 +365,22 @@ const sortDPSWithStab = (a, b) =>
 const sortCounter = (a, b) => b.percentage - a.percentage;
 
 const sortStrong = (a, b) => b.max_cp - a.max_cp;
+
+const isNesting = pokemonObj => {
+  // 아래 코드 작동 안함
+  // const $ = await rp({
+  //   uri: "https://pokemongo.gamepress.gg/pokemon-go-nesting-species-list",
+  //   transform: body => cheerio.load(body)
+  // });
+  // let anchors = $(
+  //   ".views-view-grid.horizontal.cols-4.clearfix span.field-content > a"
+  // );
+  // let nesting = [];
+  // anchors.forEach(el =>
+  //   nesting.push(Number(el.getAttribute("href").split("/")[2]))
+  // );
+  // console.log(nesting);
+  // return nesting.includes(pokemonObj.number);
+};
 
 exports.pokedexFulfillment = functions.https.onRequest(app);
