@@ -61,7 +61,7 @@ app.intent("포켓몬 검색", (conv, _, option) => {
     conv.ask(`${name}. ${pokemons[0].classify}.`);
     conv.ask(`${pokemons[0].info}`);
     conv.ask(buildPokemonCard(pokemons[0]));
-    conv.ask(buildSuggestions(pokemons[0]));
+    conv.ask(new Suggestions(buildSuggestions(pokemons[0])));
     return;
   }
 
@@ -83,7 +83,13 @@ app.intent("포켓몬 IV 차트 묻기", (conv, _, option) => {
     conv.ask(`${buildFullName(pokemons[0])}의 IV 차트입니다.`);
     conv.ask(`날씨가 ${buildWeatherBoost(pokemons[0])}일 때 부스트됩니다.`);
     conv.ask(buildPokemonIVChart(pokemons[0]));
-    conv.ask(buildSuggestions(pokemons[0]));
+    conv.ask(new Suggestions(buildFullName(pokemons[0])));
+    conv.ask(
+      new Suggestions(
+        buildSuggestions(pokemons[0]).filter(el => !el.includes("IV"))
+      )
+    );
+    conv.ask(new Suggestions(`❌ 닫기`));
     return;
   }
 
@@ -102,13 +108,20 @@ app.intent("포켓몬 약점", (conv, _, option) => {
   const name = pokemons[0].name;
 
   if (pokemons.length === 1) {
-    pokemons[0].has_multi_form_type
-      ? conv.ask(
-          `${name} (${pokemons[0].form})에게 ` +
-            `가장 큰 피해를 입히는 포켓몬의 목록입니다.`
-        )
-      : conv.ask(`${name}에게 가장 큰 피해를 입히는 포켓몬의 목록입니다.`);
+    const fullName = buildFullName(pokemons[0]);
+    conv.ask(
+      `${Josa.r(fullName, "은/는")} ${buildFullType(
+        pokemons[0]
+      )}이며, ${buildFullWeaknesses(pokemons[0])}에 특히 취약합니다.`
+    );
+    conv.ask(`다음은 ${fullName}에게 가장 큰 피해를 입히는 포켓몬들입니다.`);
     conv.ask(buildCounterList(pokemons[0]));
+    conv.ask(new Suggestions(buildFullName(pokemons[0])));
+    conv.ask(
+      new Suggestions(
+        buildSuggestions(pokemons[0]).filter(el => !el.includes("약점"))
+      )
+    );
     conv.ask(new Suggestions(`❌ 닫기`));
     return;
   }
@@ -359,23 +372,21 @@ const buildCounterList = pokemonObj => {
 };
 
 const buildSuggestions = pokemonObj => {
-  return new Suggestions(
-    [
-      ...(pokemonObj.has_multi_form_type
-        ? [
-            pokemonObj.name,
-            `💫 ${pokemonObj.name} (${pokemonObj.form}) 약점`,
-            `${pokemonObj.name} (${pokemonObj.form}) IV`
-          ]
-        : [`💫 ${pokemonObj.name} 약점`, `${pokemonObj.name} IV`]),
-      nesting_species.includes(pokemonObj.number)
-        ? `${pokemonObj.name} 둥지`
-        : null,
-      ...pokemonObj.evolution.filter(el => el !== pokemonObj.name),
-      buildFullType(pokemonObj),
-      "❌ 닫기"
-    ].filter(el => el != null)
-  );
+  return [
+    ...(pokemonObj.has_multi_form_type
+      ? [
+          pokemonObj.name,
+          `💫 ${pokemonObj.name} (${pokemonObj.form}) 약점`,
+          `📊 ${pokemonObj.name} (${pokemonObj.form}) IV`
+        ]
+      : [`💫 ${pokemonObj.name} 약점`, `📊 ${pokemonObj.name} IV`]),
+    nesting_species.includes(pokemonObj.number)
+      ? `${pokemonObj.name} 둥지`
+      : null,
+    ...pokemonObj.evolution.filter(el => el !== pokemonObj.name),
+    buildFullType(pokemonObj),
+    "❌ 닫기"
+  ].filter(el => el != null);
 };
 
 const buildEventList = body => {
@@ -383,10 +394,10 @@ const buildEventList = body => {
   return "...";
 };
 
-const buildFullType = pokemonObj => `${pokemonObj.types.join(" · ")} 타입`;
+const buildFullType = pokemonObj => `${pokemonObj.types.join("·")} 타입`;
 
 const buildFullWeaknesses = pokemonObj =>
-  `${pokemonObj.weaknesses_types.join(" · ")} 타입`;
+  `${pokemonObj.weaknesses_types.join("·")} 타입`;
 
 const buildFullName = pokemonObj => {
   if (pokemonObj.has_multi_form_type) {
