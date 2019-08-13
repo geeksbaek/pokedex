@@ -52,22 +52,8 @@ app.intent("Default Welcome Intent", conv => {
 });
 
 app.intent("포켓몬 검색", (conv, _, option) => {
-  if (!conv.parameters["name"]) {
-    const text = option || conv.arguments.parsed.input.text;
-    const match = text.match(reNameForm);
-    if (match) {
-      conv.parameters["name"] = match[1];
-      conv.parameters["form"] = match[2];
-    } else {
-      conv.parameters["name"] = text;
-    }
-  }
-
   // name과 가장 비슷한 이름을 가진 포켓몬을 찾는다.
-  const pokemons = findMostSimilarPokemons(
-    conv.parameters["name"],
-    conv.parameters["form"]
-  );
+  const pokemons = findMostSimilarPokemons(conv, option);
   const name = pokemons[0].name;
 
   // 검색 결과가 하나인 경우 하나의 포켓몬을 BasicCard 로 응답한다.
@@ -88,23 +74,31 @@ app.intent("포켓몬 검색", (conv, _, option) => {
   conv.ask(new Suggestions(`❌ 닫기`));
 });
 
-app.intent("포켓몬 약점", (conv, _, option) => {
-  if (!conv.parameters["name"]) {
-    const text = option || conv.arguments.parsed.input.text;
-    const match = text.match(reNameForm);
-    if (match) {
-      conv.parameters["name"] = match[1];
-      conv.parameters["form"] = match[2];
-    } else {
-      conv.parameters["name"] = text;
-    }
+app.intent("포켓몬 IV 차트 묻기", (conv, _, option) => {
+  // name과 가장 비슷한 이름을 가진 포켓몬을 찾는다.
+  const pokemons = findMostSimilarPokemons(conv, option);
+  const name = pokemons[0].name;
+
+  if (pokemons.length === 1) {
+    conv.ask(`${buildFullName(pokemons[0])}의 IV 차트입니다.`);
+    conv.ask(`날씨가 ${buildWeatherBoost(pokemons[0])}일 때 부스트됩니다.`);
+    conv.ask(buildPokemonIVChart(pokemons[0]));
+    conv.ask(buildSuggestions(pokemons[0]));
+    return;
   }
 
-  const pokemons = findMostSimilarPokemons(
-    conv.parameters["name"],
-    conv.parameters["form"]
+  // 검색 결과가 여러 개인 경우 포켓몬의 목록을 List 로 응답한다.
+  conv.ask(
+    `여러 폼 타입의 ${Josa.r(name, "이/가")} 있습니다. ` +
+      `궁금한 포켓몬을 선택하세요.`
   );
+  conv.ask(buildPokemonList(pokemons, "IV"));
+  conv.ask(new Suggestions(`❌ 닫기`));
+});
 
+app.intent("포켓몬 약점", (conv, _, option) => {
+  // name과 가장 비슷한 이름을 가진 포켓몬을 찾는다.
+  const pokemons = findMostSimilarPokemons(conv, option);
   const name = pokemons[0].name;
 
   if (pokemons.length === 1) {
@@ -124,7 +118,7 @@ app.intent("포켓몬 약점", (conv, _, option) => {
       `약점이 궁금한 포켓몬을 선택해주세요.`
   );
 
-  conv.ask(buildPokemonCounterList(pokemons));
+  conv.ask(buildPokemonList(pokemons, "약점"));
   conv.ask(new Suggestions([name, `❌ 닫기`]));
 });
 
@@ -199,7 +193,21 @@ const findPokemon = name => pokedex.filter(el => el.name === name);
 const findPokemonWithForm = (name, form) =>
   pokedex.find(el => el.name === name && el.form === form);
 
-const findMostSimilarPokemons = (name, form) => {
+const findMostSimilarPokemons = (conv, option) => {
+  if (!conv.parameters["name"]) {
+    const text = option || conv.arguments.parsed.input.text;
+    const match = text.match(reNameForm);
+    if (match) {
+      conv.parameters["name"] = match[1];
+      conv.parameters["form"] = match[2];
+    } else {
+      conv.parameters["name"] = text;
+    }
+  }
+
+  let name = conv.parameters["name"];
+  let form = conv.parameters["form"];
+
   const pokemon = stringSimilarity.findBestMatch(
     name,
     pokedex.map(el => el.name)
@@ -246,74 +254,68 @@ const buildPokemonCard = pokemonObj => {
   });
 };
 
-const buildPokemonCPChart = pokemonObj => {
+const buildPokemonIVChart = pokemonObj => {
+  let lv20chart = calcCPChart(pokemonObj, 20).filter(el => el[3] >= 41);
+  let lv25chart = calcCPChart(pokemonObj, 25).filter(el => el[3] >= 41);
+  let lv30chart = calcCPChart(pokemonObj, 30).filter(el => el[3] >= 41);
+  let lv35chart = calcCPChart(pokemonObj, 35).filter(el => el[3] >= 41);
+
+  let rows = [];
+  for (let i = 0; i < lv20chart.length; i++) {
+    rows.push({
+      cells: [
+        `${((lv20chart[i][3] / 45) * 100).toFixed(0)}%`,
+        `${lv20chart[i][4]}`,
+        `${lv25chart[i][4]}`,
+        `${lv30chart[i][4]}`,
+        `${lv35chart[i][4]}`
+      ]
+    });
+  }
+
   return new Table({
-    title: "최대 CP 차트",
-    subtitle: `날씨 [${buildWeatherBoost(pokemonObj)}] 에 부스트 됨`,
+    title: `${buildFullName(pokemonObj)} IV 차트`,
     image: new Image({
       url: pokemonObj.image_url,
       alt: buildFullName(pokemonObj)
     }),
     columns: [
       {
-        header: "",
-        align: "LEADING"
-      },
-      {
-        header: "기본 CP",
+        header: "IV",
         align: "CENTER"
       },
       {
-        header: "부스트 CP",
+        header: "레이드",
+        align: "CENTER"
+      },
+      {
+        header: "레이드 (부스트)",
+        align: "CENTER"
+      },
+      {
+        header: "야생",
+        align: "CENTER"
+      },
+      {
+        header: "야생 (부스트)",
         align: "CENTER"
       }
     ],
-    rows: [
-      {
-        cells: ["레이드", "row 1 item 2", "row 1 item 3"],
-      },
-      {
-        cells: ["야생", "row 2 item 2", "row 2 item 3"],
-      },
-      {
-        cells: ["최대 레벨", "row 2 item 2", "row 2 item 3"]
-      }
-    ],
+    rows: rows,
     buttons: new Button({
-      title: "Button Text",
-      url: "https://assistant.google.com"
+      title: "더 자세히 보기",
+      url: pokemonObj.url
     })
   });
 };
 
-const buildPokemonList = pokemonObjs => {
+const buildPokemonList = (pokemonObjs, suffix) => {
   let items = {};
   pokemonObjs
     .filter((_, i) => i < 30)
     .forEach(pokemonObj => {
       const fullName = buildFullName(pokemonObj);
-      items[fullName] = {
-        title: fullName,
-        description: [
-          buildFullType(pokemonObj),
-          `최대 ${pokemonObj.max_cp} CP`
-        ].join(` / `),
-        image: new Image({
-          url: pokemonObj.image_url,
-          alt: fullName
-        })
-      };
-    });
-  return new List({ items: items });
-};
-
-const buildPokemonCounterList = pokemonObjs => {
-  let items = {};
-  pokemonObjs
-    .filter((_, i) => i < 30)
-    .forEach(pokemonObj => {
-      const fullName = buildFullName(pokemonObj);
-      const key = `${fullName}의 약점`;
+      const key = suffix ? `${fullName} ${suffix}` : fullName;
 
       items[key] = {
         title: key,
@@ -360,8 +362,12 @@ const buildSuggestions = pokemonObj => {
   return new Suggestions(
     [
       ...(pokemonObj.has_multi_form_type
-        ? [pokemonObj.name, `💫 ${pokemonObj.name} (${pokemonObj.form})의 약점`]
-        : [`💫 ${pokemonObj.name}의 약점`]),
+        ? [
+            pokemonObj.name,
+            `💫 ${pokemonObj.name} (${pokemonObj.form}) 약점`,
+            `${pokemonObj.name} (${pokemonObj.form}) IV`
+          ]
+        : [`💫 ${pokemonObj.name} 약점`, `${pokemonObj.name} IV`]),
       nesting_species.includes(pokemonObj.number)
         ? `${pokemonObj.name} 둥지`
         : null,
@@ -406,6 +412,38 @@ const sortDPSWithStab = (a, b) =>
 const sortCounter = (a, b) => b.percentage - a.percentage;
 
 const sortStrong = (a, b) => b.max_cp - a.max_cp;
+
+const calcCPChart = (pokemonObj, level) => {
+  let data = [];
+  let cpm = {
+    15: 0.51739395,
+    20: 0.5974,
+    25: 0.667934,
+    30: 0.7317,
+    35: 0.76156384,
+    40: 0.7903
+  }[level];
+
+  for (let i = 12; i <= 15; i++)
+    for (let j = 12; j <= 15; j++)
+      for (let k = 12; k <= 15; k++)
+        data.push([i, j, k, i + j + k, calcCP(pokemonObj, [i, j, k], cpm)]);
+
+  return data.sort((a, b) => (b[3] == a[3] ? b[4] - a[4] : b[3] - a[3]));
+};
+
+const calcCP = (pokemonObj, iv, cpm) => {
+  return Math.max(
+    10,
+    Math.floor(
+      0.1 *
+        Math.pow((pokemonObj.hp + iv[0]) * cpm, 0.5) *
+        (pokemonObj.atk + iv[1]) *
+        cpm *
+        Math.pow((pokemonObj.def + iv[2]) * cpm, 0.5)
+    )
+  );
+};
 
 const isNesting = pokemonObj => {
   // 아래 코드 작동 안함

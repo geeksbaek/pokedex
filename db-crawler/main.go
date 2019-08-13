@@ -33,12 +33,12 @@ type Pokemon struct {
 	URL string `json:"url"` // 관련 링크
 
 	// CPRank int `json:"cp_rank"` // CP 순위
-	MaxCP int `json:"max_cp"` // 최대 CP
-	// MaxCPInResearchEncounters                int // 리서치 보상에서 최대 CP
-	// MaxCPInMaxHatchedOrRaids                 int // 부화 및 레이드에서 최대 CP
-	// MaxCPInMaxHatchedOrRaidsWithWeatherBoost int // 부화 및 레이드(날씨 부스트)에서 최대 CP
-	// MaxCPInMaxWild                           int // 필드에서 최대 CP
-	// MaxCPInMaxWildWithWeatherBoost           int // 필드(날씨 부스트)에서 최대 CP
+	MaxCP                                    int `json:"max_cp"`              // 최대 CP
+	MaxCPInResearchEncounters                int `json:"max_cp_research"`     // 리서치 보상에서 최대 CP
+	MaxCPInMaxHatchedOrRaids                 int `json:"max_cp_raid"`         // 부화 및 레이드에서 최대 CP
+	MaxCPInMaxHatchedOrRaidsWithWeatherBoost int `json:"max_cp_raid_boosted"` // 부화 및 레이드(날씨 부스트)에서 최대 CP
+	MaxCPInMaxWild                           int `json:"max_cp_wild"`         // 필드에서 최대 CP
+	MaxCPInMaxWildWithWeatherBoost           int `json:"max_cp_wild_boosted"` // 필드(날씨 부스트)에서 최대 CP
 
 	BaseCaptureRate   float64 `json:"base_capture_rate"`   // 기본 포획률
 	BaseFleeRate      float64 `json:"base_flee_rate"`      // 기본 도주율
@@ -186,16 +186,21 @@ func main() {
 				HP:       toInt(doc.Find(`.table-stats:first-child tr:nth-child(3) td:nth-child(2)`).Text()),
 				URL:      doc.Find(`meta[property="og:url"]`).First().AttrOr("content", ""),
 				// CPRank:            toInt(doc.Find(`#cont > div > span > em`).Text()),
-				MaxCP:             toInt(doc.Find(`article.pokemon-stats table.table-stats:nth-child(3) tr:last-child td:nth-child(2)`).Contents().Not(`a`).Text()),
-				BaseCaptureRate:   perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(1) td:last-child`).Text()),
-				BaseFleeRate:      perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(2) td:last-child`).Text()),
-				BuddyWalkDistance: kmToInt(doc.Find(`table.table-stats:last-child tr:nth-child(3) td:last-child`).Text()),
-				ImageURL:          getImageURL(doc),
-				Evolution:         evolution,
-				WeaknessesTypes:   weaknessesTypes,
-				QuickSkillList:    quickSkillList,
-				ChargeSkillList:   chargeSkillList,
-				Counters:          counters,
+				MaxCPInResearchEncounters:                toInt(doc.Find(`article.pokemon-stats table.table-stats:nth-child(3) tr:nth-child(1) td:nth-child(2)`).Contents().Not(`a`).Text()),
+				MaxCPInMaxHatchedOrRaids:                 toInt(doc.Find(`article.pokemon-stats table.table-stats:nth-child(3) tr:nth-child(2) td:nth-child(2)`).Contents().Not(`a`).Text()),
+				MaxCPInMaxWild:                           toInt(doc.Find(`article.pokemon-stats table.table-stats:nth-child(3) tr:nth-child(3) td:nth-child(2)`).Contents().Not(`a`).Text()),
+				MaxCP:                                    toInt(doc.Find(`article.pokemon-stats table.table-stats:nth-child(3) tr:nth-child(4) td:nth-child(2)`).Contents().Not(`a`).Text()),
+				MaxCPInMaxHatchedOrRaidsWithWeatherBoost: toInt(doc.Find(`#stats > div > table:nth-child(5) > tbody > tr:nth-child(1) > td:nth-child(2)`).Contents().Not(`a`).Text()),
+				MaxCPInMaxWildWithWeatherBoost:           toInt(doc.Find(`#stats > div > table:nth-child(5) > tbody > tr:nth-child(2) > td:nth-child(2)`).Contents().Not(`a`).Text()),
+				BaseCaptureRate:                          perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(1) td:last-child`).Text()),
+				BaseFleeRate:                             perToFloat(doc.Find(`table.table-stats:last-child tr:nth-child(2) td:last-child`).Text()),
+				BuddyWalkDistance:                        kmToInt(doc.Find(`table.table-stats:last-child tr:nth-child(3) td:last-child`).Text()),
+				ImageURL:                                 getImageURL(doc),
+				Evolution:                                evolution,
+				WeaknessesTypes:                          weaknessesTypes,
+				QuickSkillList:                           quickSkillList,
+				ChargeSkillList:                          chargeSkillList,
+				Counters:                                 counters,
 			})
 
 			formMap[getFormFromTitle(doc.Find(`section.heading > div.title > h1`).Text(), locale)] = true
