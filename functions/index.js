@@ -214,9 +214,9 @@ const findMostSimilarPokemons = (conv, option) => {
   ).bestMatch.target;
 
   if (form) {
-    return [findPokemonWithForm(pokemon, form)];
+    return [findPokemonWithForm(pokemon, form)] || pokedex[0];
   }
-  return findPokemon(pokemon);
+  return findPokemon(pokemon) || pokedex[0];
 };
 
 const buildPokemonCard = pokemonObj => {
