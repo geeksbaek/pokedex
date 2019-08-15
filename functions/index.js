@@ -39,9 +39,12 @@ const weather_boost = JSON.parse(
 const nesting_species = JSON.parse(
   fs.readFileSync("data/nesting_species.json", "utf8")
 );
+const bgm = JSON.parse(fs.readFileSync("data/bgm.json", "utf8"));
 
 const reNameForm = /([^ ]+) \((.*)\)/;
 const reAddComma = /\B(?=(\d{3})+(?!\d))/g;
+
+const exclamationBeepURL = `https://storage.googleapis.com/pokedex-assistants/emerald%200015%20-%20Exclamation%20Beep.mp3`;
 
 app.intent("포켓몬 검색", (conv, _, option) => {
   // name과 가장 비슷한 이름을 가진 포켓몬을 찾는다.
@@ -50,7 +53,7 @@ app.intent("포켓몬 검색", (conv, _, option) => {
 
   // 검색 결과가 하나인 경우 하나의 포켓몬을 BasicCard 로 응답한다.
   if (pokemons.length === 1) {
-    conv.ask(`${name}. ${pokemons[0].classify}.`);
+    conv.ask(buildTextWithExclamationBeep(`${name}. ${pokemons[0].classify}.`));
     conv.ask(`${pokemons[0].info}`);
     conv.ask(buildPokemonCard(pokemons[0]));
     conv.ask(new Suggestions(buildSuggestions(pokemons[0])));
@@ -78,7 +81,11 @@ app.intent("포켓몬 IV 차트 묻기", (conv, _, option) => {
   const name = pokemons[0].name;
 
   if (pokemons.length === 1) {
-    conv.ask(`${buildFullName(pokemons[0])}의 IV 차트입니다.`);
+    conv.ask(
+      buildTextWithExclamationBeep(
+        `${buildFullName(pokemons[0])}의 IV 차트입니다.`
+      )
+    );
     conv.ask(
       `<speak>날씨가 ${buildWeatherBoost(
         pokemons[0]
@@ -117,12 +124,14 @@ app.intent("포켓몬 약점", (conv, _, option) => {
   if (pokemons.length === 1) {
     const fullName = buildFullName(pokemons[0]);
     conv.ask(
-      `${Josa.r(fullName, "은/는")} ${buildFullType(
-        pokemons[0]
-      )}이며, ${buildFullWeaknesses(pokemons[0]).replace(
-        /\*/g,
-        ""
-      )} 타입에 취약합니다.`
+      buildTextWithExclamationBeep(
+        `${Josa.r(fullName, "은/는")} ${buildFullType(
+          pokemons[0]
+        )}이며, ${buildFullWeaknesses(pokemons[0]).replace(
+          /\*/g,
+          ""
+        )} 타입에 취약합니다.`
+      )
     );
     conv.ask(buildCounterList(pokemons[0]));
     conv.ask(new Suggestions(buildFullName(pokemons[0])));
@@ -167,7 +176,11 @@ app.intent("타입 검색", conv => {
     conv.ask(new Suggestions(types.map(el => `${el} 타입 포켓몬`)));
     return;
   } else if (find.length === 1) {
-    conv.ask(`${types.join("·")} 타입을 가지는 포켓몬을 찾았습니다.`);
+    conv.ask(
+      buildTextWithExclamationBeep(
+        `${types.join("·")} 타입을 가지는 포켓몬을 찾았습니다.`
+      )
+    );
     conv.ask(buildPokemonCard(find[0]));
     conv.ask(
       new Suggestions(
@@ -184,9 +197,11 @@ app.intent("타입 검색", conv => {
   }
 
   conv.ask(
-    `${types.join(
-      "·"
-    )} 타입을 가지는 포켓몬을 찾았습니다. 궁금한 포켓몬을 선택해주세요.`
+    buildTextWithExclamationBeep(
+      `${types.join(
+        "·"
+      )} 타입을 가지는 포켓몬을 찾았습니다. 궁금한 포켓몬을 선택해주세요.`
+    )
   );
   conv.ask(buildPokemonList(find));
   if (types.length >= 2) {
@@ -208,17 +223,45 @@ app.intent("이벤트 묻기", async conv => {
     })
   );
   conv.ask(new Suggestions(`❌ 닫기`));
+});
 
-  // const $ = await rp({
-  //   uri: "https://pokemon.gameinfo.io/ko/events",
-  //   transform: body => cheerio.load(body)
-  // });
+app.intent("BGM", conv => {
+  let bgm_list = {};
+  bgm.forEach(el => (bgm_list[el.url] = { title: el.title }));
 
-  // let articles = $("#events > div.events.current article");
-  // console.log(articles.html());
+  conv.ask("어떤 BGM을 듣고 싶으세요?");
+  conv.ask(new List({ items: bgm_list }));
+  conv.ask(new Suggestions(`❌ 닫기`));
+});
 
-  // conv.ask(`지금 진행 중인 이벤트 ${articles.length}개를 찾았습니다.`);
-  // conv.ask(new Suggestions(`❌ 닫기`));
+app.intent("BGM select", (conv, _, option) => {
+  const text = option || conv.arguments.parsed.input.text;
+  const find = bgm.find(el => el.url === text);
+
+  conv.ask("<speak><sub alias=''>🎶</sub></speak>");
+  conv.ask(
+    new MediaObject({
+      name: find.title,
+      url: find.url,
+      description: "Release date: Nov 21st, 1999",
+      icon: new Image({
+        url:
+          "http://23.237.126.42/soundcovers/gameboy-gbs/thumbs_large/gbc_pokemongold.jpg",
+        alt: "Pokemon Gold"
+      })
+    })
+  );
+  conv.ask(new Suggestions(["다른 BGM 틀어줘", `❌ 닫기`]));
+});
+
+app.intent("BGM finish", conv => {
+  const mediaStatus = conv.arguments.get("MEDIA_STATUS");
+  let response = ["Unknown media status received."];
+  if (mediaStatus && mediaStatus.status === "FINISHED") {
+    response = ["정말 좋은 BGM 이었죠?", "추억이 새록새록 돋아나네요."];
+  }
+  conv.ask(response[Math.floor(Math.random() * response.length)]);
+  conv.ask(new Suggestions(["다른 BGM 틀어줘", `❌ 닫기`]));
 });
 
 const findPokemon = name => pokedex.filter(el => el.name === name);
@@ -257,50 +300,6 @@ const buildPokemonCard = pokemonObj => {
   if (regional[pokemonObj.number]) {
     regionalText = `  \n📍 지역 한정: ${regional[pokemonObj.number].where}`;
   }
-
-  // return new Table({
-  //   title: `${buildFullName(pokemonObj)} #${("000" + pokemonObj.number).slice(
-  //     -3
-  //   )}`,
-  //   subtitle: buildFullType(pokemonObj),
-  //   image: new Image({
-  //     url: pokemonObj.image_url,
-  //     alt: buildFullName(pokemonObj)
-  //   }),
-  //   rows: [
-  //     {
-  //       cells: [
-  //         "노말 어택",
-  //         `${pokemonObj.quick
-  //           .sort(sortDPSWithStab)
-  //           .map(buildChargeText)
-  //           .join("·")}`
-  //       ],
-  //       dividerAfter: false
-  //     },
-  //     {
-  //       cells: ["스페셜 어택", `${buildFullWeaknesses(pokemonObj)}`],
-  //       dividerAfter: true
-  //     },
-  //     {
-  //       cells: [
-  //         "약점",
-  //         `${pokemonObj.charge
-  //           .sort(sortDPSWithStab)
-  //           .map(buildChargeText)
-  //           .join("·")}`
-  //       ],
-  //       dividerAfter: false
-  //     },
-  //     {
-  //       cells: ["저항", `${buildFullResistants(pokemonObj)}`],
-  //       dividerAfter: true
-  //     },
-  //     {
-  //       cells: ["날씨 부스트", `${buildWeatherBoost(pokemonObj)}`]
-  //     }
-  //   ]
-  // });
 
   return new BasicCard({
     text:
@@ -507,6 +506,9 @@ const buildChargeText = v => {
 
 const buildWeatherBoost = pokemonObj =>
   [...new Set(pokemonObj.types.map(t => weather_boost[t].name))].join(", ");
+
+const buildTextWithExclamationBeep = str =>
+  `<speak><audio src="${exclamationBeepURL}"/><break time="medium"/>${str}</speak>`;
 
 const sortDPSWithStab = (a, b) =>
   (b.stab ? b.dps * 1.2 : b.dps) - (a.stab ? a.dps * 1.2 : a.dps);
