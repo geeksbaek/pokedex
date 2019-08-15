@@ -48,12 +48,18 @@ type Pokemon struct {
 
 	ImageURL string `json:"image_url"` // 이미지 주소
 
-	Evolution       []string `json:"evolution"`        // 진화
-	WeaknessesTypes []string `json:"weaknesses_types"` // 취약한 타입
+	Evolution  []string `json:"evolution"`  // 진화
+	Weaknesses []*Deal  `json:"weaknesses"` // 취약 타입
+	Resistants []*Deal  `json:"resistants"` // 저항 타입
 
 	QuickSkillList  []*Skill   `json:"quick"`    // 빠른 공격 목록
 	ChargeSkillList []*Skill   `json:"charge"`   // 주요 공격 목록
 	Counters        []*Counter `json:"counters"` // 카운터 포켓몬
+}
+
+type Deal struct {
+	Type string  `json:"type"`
+	Deal float64 `json:"deal"`
 }
 
 // Skill 구조체는 스킬 정보를 구성합니다.
@@ -164,14 +170,20 @@ func main() {
 				evolution = append(evolution, strings.TrimSpace(s.Text()))
 			})
 
-			weaknessesTypes := []string{}
-			breakpoint := ""
-			doc.Find(`table.weaknesses tbody tr`).Each(func(i int, s *goquery.Selection) {
-				if breakpoint != "" && breakpoint != s.Find(`span`).Text() {
-					return
-				}
-				breakpoint = s.Find(`span`).Text()
-				weaknessesTypes = append(weaknessesTypes, convTypeLang(strings.TrimSpace(s.Find(`a`).Text()), locale))
+			weaknesses := []*Deal{}
+			doc.Find(`table.weaknesses.weak tbody tr`).Each(func(i int, s *goquery.Selection) {
+				weaknesses = append(weaknesses, &Deal{
+					Type: convTypeLang(strings.TrimSpace(s.Find(`td:nth-child(1) > a`).Text()), locale),
+					Deal: mustParseDeal(s.Find(`td:nth-child(2) > span`).Text()),
+				})
+			})
+
+			resistants := []*Deal{}
+			doc.Find(`table.weaknesses.res tbody tr`).Each(func(i int, s *goquery.Selection) {
+				resistants = append(resistants, &Deal{
+					Type: convTypeLang(strings.TrimSpace(s.Find(`td:nth-child(1) > a`).Text()), locale),
+					Deal: mustParseDeal(s.Find(`td:nth-child(2) > span`).Text()),
+				})
 			})
 
 			pokemonList = append(pokemonList, &Pokemon{
@@ -197,7 +209,8 @@ func main() {
 				BuddyWalkDistance:                        kmToInt(doc.Find(`table.table-stats:last-child tr:nth-child(3) td:last-child`).Text()),
 				ImageURL:                                 getImageURL(doc),
 				Evolution:                                evolution,
-				WeaknessesTypes:                          weaknessesTypes,
+				Weaknesses:                               weaknesses,
+				Resistants:                               resistants,
 				QuickSkillList:                           quickSkillList,
 				ChargeSkillList:                          chargeSkillList,
 				Counters:                                 counters,

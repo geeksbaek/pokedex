@@ -5,9 +5,13 @@ const {
   BasicCard,
   Table,
   Permission,
+  BrowseCarousel,
+  BrowseCarouselItem,
+  MediaObject,
   Button,
   List,
   Image,
+  LinkOutSuggestion,
   Suggestions
 } = require("actions-on-google");
 
@@ -37,19 +41,7 @@ const nesting_species = JSON.parse(
 );
 
 const reNameForm = /([^ ]+) \((.*)\)/;
-
-app.intent("Default Welcome Intent", conv => {
-  conv.ask("안녕하세요. 포켓몬 도감입니다. 궁금한 것을 물어보세요.");
-  conv.ask(
-    new Suggestions([
-      "파치리스 알려줘",
-      "레쿠쟈 약점이 뭐야?",
-      "근처에 무슨 둥지 있어?",
-      "무슨 이벤트 해?"
-    ])
-  );
-  conv.ask(new Suggestions(`❌ 닫기`));
-});
+const reAddComma = /\B(?=(\d{3})+(?!\d))/g;
 
 app.intent("포켓몬 검색", (conv, _, option) => {
   // name과 가장 비슷한 이름을 가진 포켓몬을 찾는다.
@@ -62,6 +54,12 @@ app.intent("포켓몬 검색", (conv, _, option) => {
     conv.ask(`${pokemons[0].info}`);
     conv.ask(buildPokemonCard(pokemons[0]));
     conv.ask(new Suggestions(buildSuggestions(pokemons[0])));
+    conv.ask(
+      new LinkOutSuggestion({
+        name: "pokemon.gameinfo.io",
+        url: pokemons[0].url
+      })
+    );
     return;
   }
 
@@ -81,7 +79,11 @@ app.intent("포켓몬 IV 차트 묻기", (conv, _, option) => {
 
   if (pokemons.length === 1) {
     conv.ask(`${buildFullName(pokemons[0])}의 IV 차트입니다.`);
-    conv.ask(`날씨가 ${buildWeatherBoost(pokemons[0])}일 때 부스트됩니다.`);
+    conv.ask(
+      `<speak>날씨가 ${buildWeatherBoost(
+        pokemons[0]
+      )}일 때 <sub alias="부스트">부스트🔥</sub> 됩니다.</speak>`
+    );
     conv.ask(buildPokemonIVChart(pokemons[0]));
     conv.ask(new Suggestions(buildFullName(pokemons[0])));
     conv.ask(
@@ -89,7 +91,12 @@ app.intent("포켓몬 IV 차트 묻기", (conv, _, option) => {
         buildSuggestions(pokemons[0]).filter(el => !el.includes("IV"))
       )
     );
-    conv.ask(new Suggestions(`❌ 닫기`));
+    conv.ask(
+      new LinkOutSuggestion({
+        name: "pokemon.gameinfo.io",
+        url: pokemons[0].url
+      })
+    );
     return;
   }
 
@@ -112,9 +119,11 @@ app.intent("포켓몬 약점", (conv, _, option) => {
     conv.ask(
       `${Josa.r(fullName, "은/는")} ${buildFullType(
         pokemons[0]
-      )}이며, ${buildFullWeaknesses(pokemons[0])}에 특히 취약합니다.`
+      )}이며, ${buildFullWeaknesses(pokemons[0]).replace(
+        /\*/g,
+        ""
+      )} 타입에 취약합니다.`
     );
-    conv.ask(`다음은 ${fullName}에게 가장 큰 피해를 입히는 포켓몬들입니다.`);
     conv.ask(buildCounterList(pokemons[0]));
     conv.ask(new Suggestions(buildFullName(pokemons[0])));
     conv.ask(
@@ -122,7 +131,12 @@ app.intent("포켓몬 약점", (conv, _, option) => {
         buildSuggestions(pokemons[0]).filter(el => !el.includes("약점"))
       )
     );
-    conv.ask(new Suggestions(`❌ 닫기`));
+    conv.ask(
+      new LinkOutSuggestion({
+        name: "pokemon.gameinfo.io",
+        url: pokemons[0].url
+      })
+    );
     return;
   }
 
@@ -149,19 +163,29 @@ app.intent("타입 검색", conv => {
     .sort(sortStrong);
 
   if (find.length == 0) {
-    conv.ask(`${types.join(" · ")} 타입을 가지는 포켓몬이 없습니다.`);
+    conv.ask(`${types.join("·")} 타입을 가지는 포켓몬이 없습니다.`);
     conv.ask(new Suggestions(types.map(el => `${el} 타입 포켓몬`)));
     return;
   } else if (find.length === 1) {
-    conv.ask(`${types.join(" · ")} 타입을 가지는 포켓몬을 찾았습니다.`);
+    conv.ask(`${types.join("·")} 타입을 가지는 포켓몬을 찾았습니다.`);
     conv.ask(buildPokemonCard(find[0]));
-    conv.ask(new Suggestions(`❌ 닫기`));
+    conv.ask(
+      new Suggestions(
+        buildSuggestions(find[0]).filter(el => !el.includes("타입"))
+      )
+    );
+    conv.ask(
+      new LinkOutSuggestion({
+        name: "pokemon.gameinfo.io",
+        url: pokemons[0].url
+      })
+    );
     return;
   }
 
   conv.ask(
     `${types.join(
-      " · "
+      "·"
     )} 타입을 가지는 포켓몬을 찾았습니다. 궁금한 포켓몬을 선택해주세요.`
   );
   conv.ask(buildPokemonList(find));
@@ -179,10 +203,6 @@ app.intent("이벤트 묻기", async conv => {
       buttons: new Button({
         title: "이벤트 확인",
         url: "https://pokemon.gameinfo.io/ko/events"
-      }),
-      image: new Image({
-        url: "https://pokemongolive.com/img/posts/gofest2019day3.jpg",
-        alt: "이벤트 이미지"
       }),
       display: "CROPPED"
     })
@@ -238,27 +258,69 @@ const buildPokemonCard = pokemonObj => {
     regionalText = `  \n📍 지역 한정: ${regional[pokemonObj.number].where}`;
   }
 
+  // return new Table({
+  //   title: `${buildFullName(pokemonObj)} #${("000" + pokemonObj.number).slice(
+  //     -3
+  //   )}`,
+  //   subtitle: buildFullType(pokemonObj),
+  //   image: new Image({
+  //     url: pokemonObj.image_url,
+  //     alt: buildFullName(pokemonObj)
+  //   }),
+  //   rows: [
+  //     {
+  //       cells: [
+  //         "노말 어택",
+  //         `${pokemonObj.quick
+  //           .sort(sortDPSWithStab)
+  //           .map(buildChargeText)
+  //           .join("·")}`
+  //       ],
+  //       dividerAfter: false
+  //     },
+  //     {
+  //       cells: ["스페셜 어택", `${buildFullWeaknesses(pokemonObj)}`],
+  //       dividerAfter: true
+  //     },
+  //     {
+  //       cells: [
+  //         "약점",
+  //         `${pokemonObj.charge
+  //           .sort(sortDPSWithStab)
+  //           .map(buildChargeText)
+  //           .join("·")}`
+  //       ],
+  //       dividerAfter: false
+  //     },
+  //     {
+  //       cells: ["저항", `${buildFullResistants(pokemonObj)}`],
+  //       dividerAfter: true
+  //     },
+  //     {
+  //       cells: ["날씨 부스트", `${buildWeatherBoost(pokemonObj)}`]
+  //     }
+  //   ]
+  // });
+
   return new BasicCard({
     text:
-      `빠른 공격: ${pokemonObj.quick
+      `노말 어택: ${pokemonObj.quick
         .sort(sortDPSWithStab)
         .map(buildChargeText)
-        .join(" · ")}  \n` +
-      `주요 공격: ${pokemonObj.charge
+        .join("·")}  \n` +
+      `스페셜 어택: ${pokemonObj.charge
         .sort(sortDPSWithStab)
         .map(buildChargeText)
-        .join(" · ")}  \n  \n` +
-      `💫 최대 약점: ${buildFullWeaknesses(pokemonObj)}  \n` +
-      `✨ 날씨 부스트: ${buildWeatherBoost(pokemonObj)}` +
+        .join("·")}  \n  \n` +
+      `🤢 약점: ${buildFullWeaknesses(pokemonObj)}  \n` +
+      `😎 저항: ${buildFullResistants(pokemonObj)}  \n` +
+      `🔥 날씨 부스트: ${buildWeatherBoost(pokemonObj)}` +
       regionalText,
     title: `${buildFullName(pokemonObj)} #${("000" + pokemonObj.number).slice(
       -3
     )}`,
-    subtitle: buildFullType(pokemonObj),
-    buttons: new Button({
-      title: "더 자세히 보기",
-      url: pokemonObj.url
-    }),
+    subtitle: `${buildFullType(pokemonObj)} / 최대 CP ${pokemonObj.max_cp}`,
+
     image: new Image({
       url: pokemonObj.image_url,
       alt: buildFullName(pokemonObj)
@@ -278,10 +340,10 @@ const buildPokemonIVChart = pokemonObj => {
     rows.push({
       cells: [
         `${((lv20chart[i][3] / 45) * 100).toFixed(0)}%`,
-        `${lv20chart[i][4]}`,
-        `${lv25chart[i][4]}`,
-        `${lv30chart[i][4]}`,
-        `${lv35chart[i][4]}`
+        `${lv20chart[i][4].toString().replace(reAddComma, ",")}`,
+        `${lv25chart[i][4].toString().replace(reAddComma, ",")}`,
+        `${lv30chart[i][4].toString().replace(reAddComma, ",")}`,
+        `${lv35chart[i][4].toString().replace(reAddComma, ",")}`
       ]
     });
   }
@@ -293,32 +355,13 @@ const buildPokemonIVChart = pokemonObj => {
       alt: buildFullName(pokemonObj)
     }),
     columns: [
-      {
-        header: "IV",
-        align: "CENTER"
-      },
-      {
-        header: "레이드",
-        align: "CENTER"
-      },
-      {
-        header: "레이드 (부스트)",
-        align: "CENTER"
-      },
-      {
-        header: "야생",
-        align: "CENTER"
-      },
-      {
-        header: "야생 (부스트)",
-        align: "CENTER"
-      }
+      { header: "IV", align: "CENTER" },
+      { header: "레이드", align: "CENTER" },
+      { header: "레이드🔥", align: "CENTER" },
+      { header: "야생", align: "CENTER" },
+      { header: "야생🔥", align: "CENTER" }
     ],
-    rows: rows,
-    buttons: new Button({
-      title: "더 자세히 보기",
-      url: pokemonObj.url
-    })
+    rows: rows
   });
 };
 
@@ -334,7 +377,7 @@ const buildPokemonList = (pokemonObjs, suffix) => {
         title: key,
         description: [
           buildFullType(pokemonObj),
-          `최대 ${pokemonObj.max_cp} CP`
+          `최대 CP ${pokemonObj.max_cp}`
         ].join(` / `),
         image: new Image({
           url: pokemonObj.image_url,
@@ -348,27 +391,71 @@ const buildPokemonList = (pokemonObjs, suffix) => {
 const buildCounterList = pokemonObj => {
   let items = {};
   pokemonObj.counters.forEach(counter => {
-    const pokemonObj = findPokemonWithForm(counter.name, counter.form);
-    const fullName = buildFullName(pokemonObj);
+    const find = findPokemonWithForm(counter.name, counter.form);
+    const fullName = buildFullName(find);
     const key = `${fullName}`;
 
     if (items[key]) {
       return;
     }
 
+    let comb = [];
+    pokemonObj.quick.forEach(q => {
+      pokemonObj.charge.forEach(c => {
+        comb.push({
+          quick: q.type,
+          quick_deal: q.stab ? 1.2 : 1,
+          charge: c.type,
+          charge_deal: c.stab ? 1.2 : 1
+        });
+      });
+    });
+
+    let deals = comb.map(el => {
+      let quickDeal = 1;
+      let chargeDeal = 1;
+      find.weaknesses.concat(find.resistants).forEach(w => {
+        if (w.type === el.quick) {
+          quickDeal = quickDeal * w.deal * el.quick_deal;
+        }
+        if (w.type === el.charge) {
+          chargeDeal = chargeDeal * w.deal * el.charge_deal;
+        }
+      });
+      return (quickDeal + chargeDeal) / 2;
+    });
+
+    let avg = Number(
+      (deals.reduce((p, c) => p + c, 0) / deals.length).toFixed(2)
+    );
+
     items[key] = {
       title: fullName,
       description: [
         `${counter.percentage * 100}%`,
-        `${counter.quick} · ${counter.charge}`
-      ].join(` / `),
+        `${counter.quick}·${counter.charge}`,
+        Number(avg.toFixed(1)) === 1
+          ? `😑 ${pokemonObj.name}에게 받는 평균 피해 100%`
+          : avg > 1
+          ? `🤢 ${pokemonObj.name}에게 받는 평균 피해 ${(avg * 100).toFixed(
+              0
+            )}%`
+          : `😎 ${pokemonObj.name}에게 받는 평균 피해 ${(avg * 100).toFixed(
+              0
+            )}%`
+      ]
+        .filter(el => el)
+        .join(` / `),
       image: new Image({
-        url: pokemonObj.image_url,
+        url: find.image_url,
         alt: fullName
       })
     };
   });
-  return new List({ items: items });
+  return new List({
+    title: `${buildFullName(pokemonObj)}에게 강한 포켓몬`,
+    items: items
+  });
 };
 
 const buildSuggestions = pokemonObj => {
@@ -376,10 +463,10 @@ const buildSuggestions = pokemonObj => {
     ...(pokemonObj.has_multi_form_type
       ? [
           pokemonObj.name,
-          `💫 ${pokemonObj.name} (${pokemonObj.form}) 약점`,
-          `📊 ${pokemonObj.name} (${pokemonObj.form}) IV`
+          `🤢 ${pokemonObj.name} (${pokemonObj.form}) 약점`,
+          `📑 ${pokemonObj.name} (${pokemonObj.form}) IV`
         ]
-      : [`💫 ${pokemonObj.name} 약점`, `📊 ${pokemonObj.name} IV`]),
+      : [`🤢 ${pokemonObj.name} 약점`, `📑 ${pokemonObj.name} IV`]),
     nesting_species.includes(pokemonObj.number)
       ? `${pokemonObj.name} 둥지`
       : null,
@@ -389,15 +476,19 @@ const buildSuggestions = pokemonObj => {
   ].filter(el => el != null);
 };
 
-const buildEventList = body => {
-  console.log(body);
-  return "...";
-};
-
 const buildFullType = pokemonObj => `${pokemonObj.types.join("·")} 타입`;
 
 const buildFullWeaknesses = pokemonObj =>
-  `${pokemonObj.weaknesses_types.join("·")} 타입`;
+  `${pokemonObj.weaknesses
+    .sort((a, b) => a.deal < b.deal)
+    .map(el => (el.deal >= 2.56 ? `**${el.type}**` : el.type))
+    .join("·")}`;
+
+const buildFullResistants = pokemonObj =>
+  `${pokemonObj.resistants
+    .sort((a, b) => a.deal > b.deal)
+    .map(el => (el.deal <= 0.39 ? `**${el.type}**` : el.type))
+    .join("·")}`;
 
 const buildFullName = pokemonObj => {
   if (pokemonObj.has_multi_form_type) {
@@ -473,4 +564,6 @@ const isNesting = pokemonObj => {
   // return nesting.includes(pokemonObj.number);
 };
 
-exports.pokedexFulfillment = functions.https.onRequest(app);
+exports.pokedexFulfillment = functions
+  .region("asia-northeast1")
+  .https.onRequest(app);

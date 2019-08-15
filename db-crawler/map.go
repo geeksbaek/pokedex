@@ -1,10 +1,23 @@
 package main
 
+import (
+	"strconv"
+	"strings"
+)
+
 func convTypeLang(keyword, locale string) string {
 	if locale == "ko" {
 		return typeMap[keyword]
 	}
 	return keyword
+}
+
+func mustParseDeal(dealStr string) float64 {
+	deal, err := strconv.ParseFloat(strings.TrimRight(strings.TrimSpace(dealStr), "%"), 64)
+	if err != nil {
+		panic(err)
+	}
+	return deal / 100
 }
 
 var typeMap = map[string]string{
