@@ -71,4 +71,4 @@
 
 pokedex-actions 는 아래 웹사이트의 데이터를 사용합니다.
 
-- https://pokemon.gameinfo.io
+- <https://pokemon.gameinfo.io>
