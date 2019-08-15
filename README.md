@@ -1,9 +1,8 @@
 # pokedex
 
-포켓몬 도감(pokedex)은 모바일 게임 [Pokémon GO](https://www.pokemongo.com/) 플레이를
-보조하는 구글 어시스턴트 챗봇입니다.
+포켓몬 도감(pokedex)은 모바일 게임 [Pokémon GO](https://www.pokemongo.com/)를 위한 구글 어시스턴트 Action 입니다.
 
-현재 포켓몬 도감에는 Pokémon GO 에서 만날 수 있는 1세대 ~ 4세대 포켓몬의 데이터가 들어있습니다.
+현재 포켓몬 도감에는 Pokémon GO에서 만날 수 있는 모든 포켓몬의 데이터가 들어있습니다.
 
 ## Features
 
