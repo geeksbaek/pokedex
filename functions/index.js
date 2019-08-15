@@ -190,7 +190,7 @@ app.intent("타입 검색", conv => {
     conv.ask(
       new LinkOutSuggestion({
         name: "pokemon.gameinfo.io",
-        url: pokemons[0].url
+        url: find[0].url
       })
     );
     return;

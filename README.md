@@ -88,7 +88,7 @@
 1. `포켓몬 도감과 대화`
 2. `그란돈의 IV 알려줘`
 
-<small>[참고 영상](https://youtu.be/xsqjDDMybVc)</small>
+[참고 영상](https://youtu.be/xsqjDDMybVc)
 
 #### 딥 링크 호출
 
@@ -103,7 +103,7 @@
 
 딥 링크를 이용하면 명시적 호출에서는 두 단계를 거쳐야 했던 명령을 한 단계로 줄일 수 있습니다.
 
-<small>[참고 영상](https://youtu.be/rExRwYy5nFE)</small>
+[참고 영상](https://youtu.be/rExRwYy5nFE)
 
 1. `포켓몬 도감에게 그란돈의 IV 물어봐`
 
@@ -117,7 +117,7 @@
 
 1. `그란돈 약점이 뭐야`
 
-<small>[참고 이미지](https://i.imgur.com/kG6aNf2.jpg)</small>
+[참고 이미지](https://i.imgur.com/kG6aNf2.jpg)
 
 ## Data Source
 
