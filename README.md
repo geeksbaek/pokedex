@@ -78,7 +78,7 @@
 
 ### 구글 어시스턴트 내에서 포켓몬 도감 사용 방법
 
-#### 명시적 호출 [참고 영상](https://youtu.be/xsqjDDMybVc)
+#### 명시적 호출 <small>[참고 영상](https://youtu.be/xsqjDDMybVc)</small>
 
 구글 어시스턴트에게 포켓몬 도감을 명시적으로 호출한 뒤 사용하는 방법입니다.
 
@@ -88,7 +88,7 @@
 1. `포켓몬 도감과 대화`
 2. `그란돈의 IV 알려줘`
 
-#### 딥 링크 호출 [참고 영상](https://youtu.be/rExRwYy5nFE)
+#### 딥 링크 호출 <small>[참고 영상](https://youtu.be/rExRwYy5nFE)</small>
 
 구글 어시스턴트에게 포켓몬 도감에서 제공하는 `invocation name`과 `argument`를 초기 요청에 포함시켜 빠르게 원하는 응답을 받을 수 있는 방법입니다.
 
@@ -103,7 +103,7 @@
 
 1. `포켓몬 도감에게 그란돈의 IV 물어봐`
 
-#### 암시적 호출 [참고 이미지](https://i.imgur.com/kG6aNf2.jpg)
+#### 암시적 호출 <small>[참고 이미지](https://i.imgur.com/kG6aNf2.jpg)</small>
 
 구글 어시스턴트에게 명령을 할 때, 초기 요청에 포켓몬 도감을 명시하지 않고도  `invocation name`과 `argument`만 요청해도 포켓몬 도감의 응답을 받을 수 있는 방법입니다.
 
