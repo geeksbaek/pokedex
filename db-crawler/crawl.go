@@ -5,11 +5,14 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"sync"
 
 	"github.com/grengojbo/goquery"
 )
+
+var reIDAndForm = regexp.MustCompile(`var pokemon = { id: (\d+), name: '.*', stats: .*, form: (\d+) };`)
 
 func crawl(locale string) {
 	wg := sync.WaitGroup{}

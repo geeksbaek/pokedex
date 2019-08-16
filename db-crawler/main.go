@@ -154,8 +154,24 @@ func main() {
 				chargeSkillList = append(chargeSkillList, &Skill{name, t, dps, isStab, isEvent})
 			})
 
+			html, err := doc.Html()
+			if err != nil {
+				panic(err)
+			}
+			matched := reIDAndForm.FindStringSubmatch(html)
+			if len(matched) != 3 {
+				fmt.Println(matched)
+				panic("not matched id and form regexp")
+			}
+
+			counterURL := fmt.Sprintf("https://pokemon.gameinfo.io/ko/pokemon/counters?id=%v&form=%v", matched[1], matched[2])
+			counterDoc, err := goquery.NewDocument(counterURL)
+			if err != nil {
+				panic(err)
+			}
+
 			counters := []*Counter{}
-			doc.Find(`table.table-counter.all tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
+			counterDoc.Find(`table.table-counter > tbody > tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
 				counters = append(counters, &Counter{
 					Name:        trimName(strings.TrimSpace(s.Find(`td:nth-child(1)`).Text())),
 					Form:        getForm(strings.TrimSpace(s.Find(`td:nth-child(1)`).Text()), locale),

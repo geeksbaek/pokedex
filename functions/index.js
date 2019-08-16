@@ -352,6 +352,7 @@ const buildPokemonIVChart = pokemonObj => {
 
   return new Table({
     title: `${buildFullName(pokemonObj)} IV 차트`,
+    subtitle: `최대 CP ${pokemonObj.max_cp}`,
     image: new Image({
       url: pokemonObj.image_url,
       alt: buildFullName(pokemonObj)
@@ -392,68 +393,70 @@ const buildPokemonList = (pokemonObjs, suffix) => {
 
 const buildCounterList = pokemonObj => {
   let items = {};
-  pokemonObj.counters.forEach(counter => {
-    const find = findPokemonWithForm(counter.name, counter.form);
-    const fullName = buildFullName(find);
-    const key = `${fullName}`;
+  pokemonObj.counters
+    .filter((_, i) => i < 30)
+    .forEach(counter => {
+      const find = findPokemonWithForm(counter.name, counter.form);
+      const fullName = buildFullName(find);
+      const key = `${fullName}`;
 
-    if (items[key]) {
-      return;
-    }
+      if (items[key]) {
+        return;
+      }
 
-    let comb = [];
-    pokemonObj.quick.forEach(q => {
-      pokemonObj.charge.forEach(c => {
-        comb.push({
-          quick: q.type,
-          quick_deal: q.stab ? 1.2 : 1,
-          charge: c.type,
-          charge_deal: c.stab ? 1.2 : 1
+      let comb = [];
+      pokemonObj.quick.forEach(q => {
+        pokemonObj.charge.forEach(c => {
+          comb.push({
+            quick: q.type,
+            quick_deal: q.stab ? 1.2 : 1,
+            charge: c.type,
+            charge_deal: c.stab ? 1.2 : 1
+          });
         });
       });
-    });
 
-    let deals = comb.map(el => {
-      let quickDeal = 1;
-      let chargeDeal = 1;
-      find.weaknesses.concat(find.resistants).forEach(w => {
-        if (w.type === el.quick) {
-          quickDeal = quickDeal * w.deal * el.quick_deal;
-        }
-        if (w.type === el.charge) {
-          chargeDeal = chargeDeal * w.deal * el.charge_deal;
-        }
+      let deals = comb.map(el => {
+        let quickDeal = 1;
+        let chargeDeal = 1;
+        find.weaknesses.concat(find.resistants).forEach(w => {
+          if (w.type === el.quick) {
+            quickDeal = quickDeal * w.deal * el.quick_deal;
+          }
+          if (w.type === el.charge) {
+            chargeDeal = chargeDeal * w.deal * el.charge_deal;
+          }
+        });
+        return (quickDeal + chargeDeal) / 2;
       });
-      return (quickDeal + chargeDeal) / 2;
+
+      let avg = Number(
+        (deals.reduce((p, c) => p + c, 0) / deals.length).toFixed(2)
+      );
+
+      items[key] = {
+        title: fullName,
+        description: [
+          `${counter.percentage * 100}%`,
+          `${counter.quick}·${counter.charge}`,
+          Number(avg.toFixed(1)) === 1
+            ? `😑 ${pokemonObj.name}에게 받는 평균 피해 100%`
+            : avg > 1
+            ? `🤢 ${pokemonObj.name}에게 받는 평균 피해 ${(avg * 100).toFixed(
+                0
+              )}%`
+            : `😎 ${pokemonObj.name}에게 받는 평균 피해 ${(avg * 100).toFixed(
+                0
+              )}%`
+        ]
+          .filter(el => el)
+          .join(` / `),
+        image: new Image({
+          url: find.image_url,
+          alt: fullName
+        })
+      };
     });
-
-    let avg = Number(
-      (deals.reduce((p, c) => p + c, 0) / deals.length).toFixed(2)
-    );
-
-    items[key] = {
-      title: fullName,
-      description: [
-        `${counter.percentage * 100}%`,
-        `${counter.quick}·${counter.charge}`,
-        Number(avg.toFixed(1)) === 1
-          ? `😑 ${pokemonObj.name}에게 받는 평균 피해 100%`
-          : avg > 1
-          ? `🤢 ${pokemonObj.name}에게 받는 평균 피해 ${(avg * 100).toFixed(
-              0
-            )}%`
-          : `😎 ${pokemonObj.name}에게 받는 평균 피해 ${(avg * 100).toFixed(
-              0
-            )}%`
-      ]
-        .filter(el => el)
-        .join(` / `),
-      image: new Image({
-        url: find.image_url,
-        alt: fullName
-      })
-    };
-  });
   return new List({
     title: `${buildFullName(pokemonObj)}에게 강한 포켓몬`,
     items: items
