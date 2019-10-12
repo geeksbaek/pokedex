@@ -6,6 +6,7 @@ import (
 	"flag"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -82,7 +83,7 @@ type Counter struct {
 
 var (
 	numberRe = regexp.MustCompile(`pokemon = { id: (\d+), name`)
-	locales  = []string{"ko", "en"}
+	locales  = []string{"ko" /*, "en"*/}
 	doCrawl  bool
 )
 
@@ -125,6 +126,8 @@ func main() {
 			if doc.Find(`article.images-block > div > div > a:nth-child(1) > picture`).Length() == 0 {
 				return nil
 			}
+
+			defer log.Println(path)
 
 			// if doc.Find(`h1.p-legendary`).Length() > 0 {
 			// 	fmt.Printf("전설의 포켓몬: %v\n", path)

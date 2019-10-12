@@ -13,6 +13,7 @@ var 도감URLs = []string{
 	`https://pokemon.fandom.com/ko/wiki/전국도감/3세대`,
 	`https://pokemon.fandom.com/ko/wiki/전국도감/4세대`,
 	`https://pokemon.fandom.com/ko/wiki/전국도감/5세대`,
+	`https://pokemon.fandom.com/ko/wiki/전국도감/6세대`,
 }
 
 func main() {

@@ -9,16 +9,20 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/grengojbo/goquery"
+	"github.com/PuerkitoBio/goquery"
 )
 
 var reIDAndForm = regexp.MustCompile(`var pokemon = { id: (\d+), name: '.*', stats: .*, form: (\d+) };`)
 
 func crawl(locale string) {
 	wg := sync.WaitGroup{}
-	for code := 1; code <= 493; code++ {
+	for code := 1; code <= 649; code++ {
 		wg.Add(1)
 		go fetch(&wg, code, locale)
+
+		if code%100 == 0 {
+			wg.Wait()
+		}
 	}
 
 	// 멜탄
