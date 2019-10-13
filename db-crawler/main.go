@@ -8,12 +8,12 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"path/filepath"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
 
+	"github.com/MichaelTJones/walk"
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -108,7 +108,7 @@ func main() {
 		pokemonList := []*Pokemon{}
 		formMap := map[string]bool{}
 
-		filepath.Walk("./raws/"+locale, func(path string, info os.FileInfo, err error) error {
+		walk.Walk("./raws/"+locale, func(path string, info os.FileInfo, err error) error {
 			if info.IsDir() {
 				return nil
 			}
@@ -128,14 +128,6 @@ func main() {
 			}
 
 			defer log.Println(path)
-
-			// if doc.Find(`h1.p-legendary`).Length() > 0 {
-			// 	fmt.Printf("전설의 포켓몬: %v\n", path)
-			// }
-
-			// if doc.Find(`h1.p-mythical`).Length() > 0 {
-			// 	fmt.Printf("환상의 포켓몬: %v\n", path)
-			// }
 
 			quickSkillList := []*Skill{}
 			doc.Find(`article.all-moves table.moves:first-child tbody tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
@@ -175,6 +167,10 @@ func main() {
 
 			counters := []*Counter{}
 			counterDoc.Find(`table.table-counter > tbody > tr:not(.old)`).Each(func(i int, s *goquery.Selection) {
+				form := getForm(strings.TrimSpace(s.Find(`td:nth-child(1)`).Text()), locale)
+				if form == "Purified" || form == "Shadow" {
+					return
+				}
 				counters = append(counters, &Counter{
 					Name:        trimName(strings.TrimSpace(s.Find(`td:nth-child(1)`).Text())),
 					Form:        getForm(strings.TrimSpace(s.Find(`td:nth-child(1)`).Text()), locale),

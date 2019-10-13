@@ -79,6 +79,10 @@ func fetch(wg *sync.WaitGroup, code int, locale string) {
 			tmp := strings.Split(url, "/")
 			form := tmp[len(tmp)-1]
 
+			if form == "purified" || form == "shadow" {
+				return
+			}
+
 			filename, err := filepath.Abs(fmt.Sprintf("./raws/"+locale+"/%v_%v.html", code, form))
 			if err != nil {
 				panic(err)
